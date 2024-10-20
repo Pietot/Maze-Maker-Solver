@@ -235,7 +235,7 @@ a:hover::after {
     padding-bottom: 10px;
 }
 
-.maze {
+.maze-container {
     background-color: rgb(141, 153, 174);
     width: calc(100vw - 300px);
     display: flex;
@@ -243,7 +243,7 @@ a:hover::after {
     justify-content: center;
 }
 
-.maze-wrapper {
+.maze {
     position: relative;
     width: calc(100% - 30px);
     height: calc(100% - 30px);
@@ -252,8 +252,6 @@ a:hover::after {
 
 #maze {
     background-color: rgb(237, 242, 244);
-    width: 100%;
-    height: 100%;
     border-radius: 10px;
 }
 
