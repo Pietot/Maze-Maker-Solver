@@ -34,7 +34,7 @@
               <label class="label-algorithm" for="select-algorithm">
                 <select
                   class="select-algorithm"
-                  name="select"
+                  name="select-algorithm"
                   id="select-algorithm"
                   required
                 >
@@ -60,11 +60,11 @@
             </div>
             <div class="algorithms" style="margin-bottom: 21px">
               <span class="text-options">Solving algorithm</span>
-              <label class="label-algorithm" for="select-algorithm">
+              <label class="label-algorithm" for="select-solving">
                 <select
                   class="select-algorithm"
-                  name="select"
-                  id="select-algorithm"
+                  name="select-solving"
+                  id="select-solving"
                   required
                 >
                   <option value="1">DFS</option>
@@ -133,9 +133,8 @@
           </div>
         </div>
       </div>
-      <div class="maze">
-        <div class="maze-wrapper">
-          <canvas id="maze"></canvas>
+      <div class="maze-container" id="maze-container">
+        <div class="maze" id="maze">
         </div>
       </div>
     </div>
@@ -144,5 +143,6 @@
         <polyline points="1 1 5 5 9 1"></polyline>
       </symbol>
     </svg>
+    <script src="js/index.js"></script>
   </body>
 </html>
