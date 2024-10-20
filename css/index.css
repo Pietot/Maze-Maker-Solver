@@ -5,8 +5,36 @@ body {
     height: 100vh;
 }
 
-i {
+a {
+    text-decoration: none;
+    position: relative;
+    transition: color 0.1s ease;
+    font-size: 1.5rem;
     color: rgb(237, 242, 244);
+    transition: color 0.3s ease;
+}
+
+a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -3px;
+    left: 0;
+    background-color: #D90429;
+    transition: width 0.5s ease;
+}
+
+a:link {
+    color: #ffa298;
+}
+
+a:hover {
+    color: #D90429;
+}
+
+a:hover::after {
+    width: 100%;
 }
 
 .container {
@@ -17,7 +45,7 @@ i {
 
 .settings {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-end;
     width: 300px;
     height: 100vh;
@@ -29,9 +57,13 @@ i {
     flex-direction: column;
     align-items: center;
     width: calc(100% - 15px);
-    height: calc(100% - 30px);
+    max-height: calc(100% - 30px);
+    margin-top: 15px;
     background-color: rgb(237, 242, 244);
     border-radius: 10px;
+    overflow: auto;
+    scrollbar-width: none;
+
 }
 
 .settings-title {
@@ -44,6 +76,7 @@ i {
     margin-bottom: 10px;
     background-color: rgb(43, 45, 66);
     border-radius: 10px;
+    min-height: 57px;
 }
 
 .span-settings {
@@ -62,21 +95,144 @@ i {
     flex-direction: column;
     align-items: center;
     width: calc(100% - 20px);
-    height: calc(100% - 110px);
     background-color: rgb(239, 35, 60);
     border-radius: 10px;
+    gap: 30px;
 }
 
 .algorithms {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
 }
 
 .text-options {
     color: rgb(237, 242, 244);
     font-size: 1.25rem;
+}
+
+.label-algorithm {
+    box-sizing: border-box;
+    height: 48px;
+}
+
+.select-algorithm {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 7px 40px 7px 12px;
+    width: 200px;
+    border: 1px solid #c9cfd8;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 1px 3px -2px #9098a9;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 18px;
+    transition: all 150ms ease;
+    box-sizing: border-box;
+    color: #404d68;
+}
+
+.select-algorithm:focus {
+    outline: none;
+    box-shadow: 0 0 0px 2px rgb(4, 167, 217);
+}
+
+
+.select-arrow {
+    position: relative;
+    top: -2px;
+    right: 30px;
+    width: 10px;
+    height: 6px;
+    stroke-width: 2px;
+    stroke: #9098a9;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.select-algorithm:hover+.select-arrow {
+    stroke: rgb(4, 167, 217);
+}
+
+.select-algorithm:focus+.select-arrow {
+    stroke: rgb(4, 167, 217);
+}
+
+.generate-button {
+    align-items: center;
+    appearance: none;
+    background-color: #3EB2FD;
+    background-image: linear-gradient(1deg, #4F58FD, #149BF3 99%);
+    background-size: calc(100% + 20px) calc(100% + 20px);
+    border-radius: 100px;
+    border-width: 0;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: CircularStd, sans-serif;
+    font-size: 1rem;
+    height: auto;
+    justify-content: center;
+    line-height: 1.5;
+    padding: 6px 20px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color .2s, background-position .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: top;
+    white-space: nowrap;
+    transition: ease 0.1s;
+}
+
+.generate-button:focus {
+    outline: none;
+}
+
+.generate-button:active {
+    transform: translateY(3px);
+    transition: ease 0.1s;
+}
+
+.generate-button:hover {
+    background-position: -20px -20px;
+}
+
+.generate-button:focus:not(:active) {
+    box-shadow: rgba(40, 170, 255, 0.25) 0 0 0 .125em;
+}
+
+.solve-button {
+    background-image: linear-gradient(1deg, #4CAF50, #8BC34A 99%);
+}
+
+.clear-button {
+    background-image: linear-gradient(1deg, #b1b1b1, #ffffff 99%);
+    color: black;
+    border-radius: 5px;
+    width: 100px;
+}
+
+.settings-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(100% - 20px);
+    background-color: rgb(141, 153, 174);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    gap: 10px;
+    padding-bottom: 10px;
 }
 
 .maze {
@@ -99,4 +255,13 @@ i {
     width: 100%;
     height: 100%;
     border-radius: 10px;
+}
+
+.sprites {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    user-select: none;
+    box-sizing: border-box;
 }
