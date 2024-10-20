@@ -26,16 +26,110 @@
             >
           </div>
           <div class="settings-options">
-            <div
-              class="text-settings"
-              style="margin-top: 20px; margin-bottom: 20px"
-            >
+            <div class="text-settings" style="margin-top: 20px">
               <span> Algorithms </span>
             </div>
             <div class="algorithms">
-                <span class="text-options">Generation algorithm</span>
-                <select name="" id=""></select>
+              <span class="text-options">Generation algorithm</span>
+              <label class="label-algorithm" for="select-algorithm">
+                <select
+                  class="select-algorithm"
+                  name="select"
+                  id="select-algorithm"
+                  required
+                >
+                  <option value="1">Kruskal</option>
+                  <option value="2">RDFS</option>
+                  <option value="3">Simplified Prim</option>
+                  <option value="4">True Prim</option>
+                  <option value="5">Hunt and Kill</option>
+                  <option value="6">Eller</option>
+                  <option value="7">Iterative Division</option>
+                  <option value="8">Binary Tree</option>
+                  <option value="9">Sidewinder</option>
+                  <option value="10">Growing Tree</option>
+                  <option value="11">Aldous-Broder</option>
+                  <option value="12">Wilson</option>
+                  <option value="13">Origin Shift</option>
+                </select>
+                <svg class="select-arrow">
+                  <use xlink:href="#select-arrow-down"></use>
+                </svg>
+              </label>
+              <button class="generate-button" role="button">Generate</button>
             </div>
+            <div class="algorithms" style="margin-bottom: 21px">
+              <span class="text-options">Solving algorithm</span>
+              <label class="label-algorithm" for="select-algorithm">
+                <select
+                  class="select-algorithm"
+                  name="select"
+                  id="select-algorithm"
+                  required
+                >
+                  <option value="1">DFS</option>
+                  <option value="2">BFS (Dijkstra)</option>
+                  <option value="3">GBFS</option>
+                  <option value="4">A*</option>
+                </select>
+                <svg class="select-arrow">
+                  <use xlink:href="#select-arrow-down"></use>
+                </svg>
+              </label>
+              <button class="generate-button solve-button" role="button">
+                Solve
+              </button>
+              <button class="generate-button clear-button" role="button">
+                Clear
+              </button>
+            </div>
+          </div>
+          <div class="settings-title">
+            <span class="span-settings text-settings"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                style="height: 30px; margin-right: 10px"
+              >
+                <path
+                  d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24l0 112c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-112c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"
+                  fill="rgb(237, 242, 244)"
+                />
+              </svg>
+              Infos</span
+            >
+          </div>
+          <div class="settings-info">
+            <span
+              class="text-settings"
+              style="font-size: 1.5rem; margin-top: 10px"
+              >Made by
+              <a
+                href="https://github.com/Pietot/"
+                style="font-weight: bold"
+                target="_blank"
+                >Pietot</a
+              ></span
+            >
+            <span class="text-settings"
+              ><a
+                href="https://github.com/Pietot/Maze-Maker-Solver"
+                target="_blank"
+                >-> Source code</a
+              ></span
+            >
+            <span class="text-settings"
+              ><a
+                href="https://github.com/angeluriot/Maze_solver"
+                target="_blank"
+                >-> Original</a
+              ></span
+            >
+            <span class="text-settings"
+              ><a href="https://github.com/Pietot/Lapyrinth" target="_blank"
+                >-> More</a
+              ></span
+            >
           </div>
         </div>
       </div>
@@ -45,5 +139,10 @@
         </div>
       </div>
     </div>
+    <svg class="sprites">
+      <symbol id="select-arrow-down" viewBox="0 0 10 6">
+        <polyline points="1 1 5 5 9 1"></polyline>
+      </symbol>
+    </svg>
   </body>
 </html>
