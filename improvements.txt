@@ -1,0 +1,1 @@
+Add a field in the settings idk where where the user can set the size of the squares in the maze. This will allow the user to make the maze bigger or smaller.
