@@ -266,6 +266,10 @@ a:hover::after {
     background-color: rgb(231, 231, 233);
 }
 
+.wall {
+    background-color: rgb(43, 45, 66);
+}
+
 .select-sprites {
     position: absolute;
     width: 0;
