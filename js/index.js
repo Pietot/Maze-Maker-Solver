@@ -44,16 +44,15 @@ function generateGrid(rows, cols) {
       cell.classList.add("cell");
       cell.style.width = `${squareSize}px`;
       cell.style.height = `${squareSize}px`;
-      cell.style.backgroundColor =
-        (i + j) % 2 === 0 ? "rgb(255, 255, 255)" : "rgb(231, 231, 233)";
+      let color = (i + j) % 2 === 0 ? "cell1" : "cell2";
+      cell.classList.add(color);
       cell.setAttribute("row", i);
       cell.setAttribute("col", j);
       cell.addEventListener("mousedown", function () {
-        if (cell.style.backgroundColor === "rgb(43, 45, 66)") {
-          cell.style.backgroundColor =
-            (i + j) % 2 === 0 ? "rgb(255, 255, 255)" : "rgb(231, 231, 233)";
+        if (cell.classList.contains("wall")) {
+          cell.classList.remove("wall");
         } else {
-          cell.style.backgroundColor = "rgb(43, 45, 66)";
+          cell.classList.add("wall");
         }
       });
       row.appendChild(cell);
