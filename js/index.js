@@ -1,7 +1,9 @@
 // Offset between the maze and the container (15px on left/right and top/bottom)
 const offset = 30;
 // Size of each square in the maze by default
-const defaultSquareSize = 30;
+const defaultSquareSize = 45;
+
+let isMouseDown = false;
 
 // Function to generate the grid of the maze (rows and columns, colors, svg)
 function generateGrid(rows, cols) {
@@ -48,16 +50,36 @@ function generateGrid(rows, cols) {
       cell.classList.add(color);
       cell.setAttribute("row", i);
       cell.setAttribute("col", j);
+
+      // Event listeners for adding/removing "wall" class
       cell.addEventListener("mousedown", function () {
-        if (cell.classList.contains("wall")) {
-          cell.classList.remove("wall");
-        } else {
-          cell.classList.add("wall");
+        isMouseDown = true;
+        toggleWall(cell);
+      });
+
+      cell.addEventListener("mouseenter", function () {
+        if (isMouseDown) {
+          toggleWall(cell);
         }
       });
+
       row.appendChild(cell);
     }
     maze.appendChild(row);
+  }
+
+  // Stop the drawing when mouse is released
+  document.addEventListener("mouseup", function () {
+    isMouseDown = false;
+  });
+}
+
+// Function to toggle the "wall" class on a cell
+function toggleWall(cell) {
+  if (cell.classList.contains("wall")) {
+    cell.classList.remove("wall");
+  } else {
+    cell.classList.add("wall");
   }
 }
 
