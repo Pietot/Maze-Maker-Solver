@@ -110,6 +110,7 @@ a:hover::after {
 .text-options {
     color: rgb(237, 242, 244);
     font-size: 1.25rem;
+    font-family: monospace;
 }
 
 .label-algorithm {
@@ -128,7 +129,7 @@ a:hover::after {
     background: #fff;
     box-shadow: 0 1px 3px -2px #9098a9;
     cursor: pointer;
-    font-family: inherit;
+    font-family: sans-serif;
     font-size: 18px;
     transition: all 150ms ease;
     box-sizing: border-box;
@@ -254,6 +255,7 @@ a:hover::after {
     box-shadow: 0px 0px 30px rgba(6, 13, 29, 0.700);
     user-select: none;
     -webkit-user-select: none;
+    overflow: hidden;
 }
 
 .sprites {
