@@ -258,6 +258,14 @@ a:hover::after {
     overflow: hidden;
 }
 
+.cell1 {
+    background-color: rgb(255, 255, 255);
+}
+
+.cell2 {
+    background-color: rgb(231, 231, 233);
+}
+
 .select-sprites {
     position: absolute;
     width: 0;
