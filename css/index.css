@@ -258,7 +258,7 @@ a:hover::after {
     overflow: hidden;
 }
 
-.sprites {
+.select-sprites {
     position: absolute;
     width: 0;
     height: 0;
