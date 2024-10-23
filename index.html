@@ -56,7 +56,9 @@
                   <use xlink:href="#select-arrow-down"></use>
                 </svg>
               </label>
-              <button class="generate-button" role="button">Generate</button>
+              <button id="generate" class="generate-button" role="button">
+                Generate
+              </button>
             </div>
             <div class="algorithms" style="margin-bottom: 21px">
               <span class="text-options">Solving algorithm</span>
@@ -76,12 +78,43 @@
                   <use xlink:href="#select-arrow-down"></use>
                 </svg>
               </label>
-              <button class="generate-button solve-button" role="button">
+              <button
+                id="solve"
+                class="generate-button solve-button"
+                role="button"
+              >
                 Solve
               </button>
-              <button class="generate-button clear-button" role="button">
-                Clear
-              </button>
+              <div class="btn-actions">
+                <button
+                  id="pen"
+                  class="action-button pen-button"
+                  role="button"
+                >
+                  <img src="assets/pen.svg" alt="pen.svg" />
+                </button>
+                <button
+                  id="paintbrush"
+                  class="action-button paintbrush-button"
+                  role="button"
+                >
+                  <img src="assets/paintbrush.svg" alt="paintbrush.svg" />
+                </button>
+                <button
+                  id="rubber"
+                  class="action-button rubber-button"
+                  role="button"
+                >
+                  <img src="assets/rubber.svg" alt="rubber.svg" />
+                </button>
+                <button
+                  id="trash"
+                  class="action-button trash-button"
+                  role="button"
+                >
+                  <img src="assets/trash.svg" alt="trash.svg" />
+                </button>
+              </div>
             </div>
           </div>
           <div class="settings-title">
