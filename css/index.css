@@ -105,6 +105,7 @@ a:hover::after {
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    width: 100%;
 }
 
 .text-options {
@@ -188,8 +189,6 @@ a:hover::after {
     text-align: center;
     text-decoration: none;
     transition: background-color .2s, background-position .2s;
-    user-select: none;
-    -webkit-user-select: none;
     touch-action: manipulation;
     vertical-align: top;
     white-space: nowrap;
@@ -217,11 +216,69 @@ a:hover::after {
     background-image: linear-gradient(1deg, #4CAF50, #8BC34A 99%);
 }
 
-.clear-button {
-    background-image: linear-gradient(1deg, #b1b1b1, #ffffff 99%);
-    color: black;
-    border-radius: 5px;
-    width: 100px;
+.btn-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.action-button {
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+}
+
+.pen-button {
+    background-color: rgb(43, 45, 66);
+    border: solid 1px rgb(0, 0, 0);
+    transition: ease 0.1s;
+}
+
+.pen-button:hover {
+    transition: ease 0.3s;
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0);
+}
+
+.paintbrush-button {
+    background-color: rgb(11, 133, 214);
+    border: solid 1px rgb(41, 11, 214);
+    transition: ease 0.3s;
+}
+
+.paintbrush-button:hover {
+    transition: ease 0.3s;
+    box-shadow: 0px 0px 10px 3px rgb(41, 11, 214);
+}
+
+.rubber-button {
+    background-color: rgb(201, 201, 201);
+    border: solid 1px rgb(255, 255, 255);
+    transition: ease 0.3s;
+}
+
+.rubber-button:hover {
+    transition: ease 0.3s;
+    box-shadow: 0px 0px 10px 3px rgba(255, 255, 255);
+    ;
+}
+
+.trash-button {
+    background-color: rgb(217, 4, 41);
+    border: solid 1px rgb(141, 0, 0);
+    transition: ease 0.3s;
+}
+
+.trash-button:hover {
+    transition: ease 0.3s;
+    box-shadow: 0px 0px 10px 3px rgba(141, 0, 0);
+}
+
+.action-button img {
+    width: 24px;
+    height: 24px;
+    -webkit-user-drag: none;
 }
 
 .settings-info {
