@@ -43,7 +43,6 @@ function generateGrid(rows, cols) {
     row.style.display = "flex";
     for (let j = 0; j < nbCols; j++) {
       const cell = document.createElement("div");
-      cell.classList.add("cell");
       cell.style.width = `${squareSize}px`;
       cell.style.height = `${squareSize}px`;
       let color = (i + j) % 2 === 0 ? "cell1" : "cell2";
@@ -107,8 +106,20 @@ function updateGrid() {
   }
 }
 
+function setButtons() {
+  const clear = document.getElementById("trash");
+  clear.onclick = function () {
+    const maze = document.getElementById("maze");
+    const walls = maze.getElementsByClassName("wall");
+    while (walls.length > 0) {
+      walls[0].classList.remove("wall");
+    }
+  };
+}
+
 // Add event listener for window resize to update the grid
 window.addEventListener("resize", updateGrid);
 
 // Initial grid generation
 generateGrid();
+setButtons();
