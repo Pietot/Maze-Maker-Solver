@@ -118,6 +118,23 @@ function setButtons() {
       walls[0].classList.remove("wall");
     }
   };
+  const lockScreen = document.getElementById("lock");
+  lockScreen.onclick = function () {
+    let svg = lockScreen.getElementsByTagName("img")[0];
+    if (lockScreen.value === "1") {
+      lockScreen.value = "0";
+      lockScreen.style.backgroundColor = "green";
+      lockScreen.style.borderColor = "darkgreen";
+      svg.src = "assets/lock-open.svg";
+      svg.alt = "lock-open.svg";
+    } else {
+      lockScreen.value = "1";
+      lockScreen.style.backgroundColor = "red";
+      lockScreen.style.borderColor = "darkred";
+      svg.src = "assets/lock.svg";
+      svg.alt = "lock.svg";
+    }
+  };
 }
 
 // Add event listener for window resize to update the grid
