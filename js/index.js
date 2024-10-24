@@ -85,7 +85,9 @@ function toggleWall(cell) {
 function updateGrid() {
   const mazeContainer = document.getElementById("maze-container");
   const maze = document.getElementById("maze");
-  const cells = maze.getElementsByClassName("cell");
+  const cells1 = maze.getElementsByClassName("cell1");
+  const cells2 = maze.getElementsByClassName("cell2");
+  const cells = [...cells1, ...cells2];
 
   const nbRows = maze.childElementCount;
   const nbCols = maze.firstChild.childElementCount;
@@ -101,6 +103,7 @@ function updateGrid() {
 
   // Update the size of each cell
   for (let cell of cells) {
+    console.log(cell, squareSize);
     cell.style.width = `${squareSize}px`;
     cell.style.height = `${squareSize}px`;
   }
