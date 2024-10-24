@@ -109,7 +109,9 @@ function updateGrid() {
   }
 }
 
+// Function to set actions to buttons
 function setButtons() {
+  // When the button with id "trash" is clicked, remove all walls
   const clear = document.getElementById("trash");
   clear.onclick = function () {
     const maze = document.getElementById("maze");
@@ -118,6 +120,8 @@ function setButtons() {
       walls[0].classList.remove("wall");
     }
   };
+
+  // When the button with id "lock" is clicked, change the way to update the grid
   const lockScreen = document.getElementById("lock");
   lockScreen.onclick = function () {
     let svg = lockScreen.getElementsByTagName("img")[0];
@@ -135,6 +139,30 @@ function setButtons() {
       svg.alt = "lock.svg";
     }
   };
+
+  // Manage the style of the buttons & the drawing mode 
+  document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll(".action-button");
+    buttons.forEach((button) => {
+      button.addEventListener("click", function () {
+        if (this.dataset.isToggle !== "1") {
+          buttons.forEach((btn) => {
+            btn.dataset.isToggle = "0";
+            btn.style.boxShadow = "";
+          });
+
+          this.dataset.isToggle = "1";
+          if (this.id === "pen") {
+            this.style.boxShadow = "0px 0px 10px 3px rgba(0, 0, 0)";
+          } else if (this.id === "paintbrush") {
+            this.style.boxShadow = "0px 0px 10px 3px rgb(41, 11, 214)";
+          } else {
+            this.style.boxShadow = "0px 0px 10px 3px rgba(255, 255, 255)";
+          }
+        }
+      });
+    });
+  });
 }
 
 // Add event listener for window resize to update the grid
