@@ -30,7 +30,7 @@ function generateGrid(rows, cols) {
   if (nbCols <= 2) nbCols = 3;
 
   // Calculate the size of each square
-  const squareSize = Math.min(
+  const squareSize = defaultSquareSize ||Math.min(
     Math.floor((mazeContainer.offsetWidth - offset) / nbCols),
     Math.floor((mazeContainer.offsetHeight - offset) / nbRows)
   );
@@ -95,19 +95,28 @@ function updateGrid() {
   const nbRows = maze.childElementCount;
   const nbCols = maze.firstChild.childElementCount;
 
-  // Calculate the new size of each square
-  const squareSize = Math.min(
-    Math.floor((mazeContainer.offsetWidth - offset) / nbCols),
-    Math.floor((mazeContainer.offsetHeight - offset) / nbRows)
-  );
+  const isGridLocked = document.getElementById("lock").value === "1";
 
-  maze.style.width = `${squareSize * nbCols}px`;
-  maze.style.height = `${squareSize * nbRows}px`;
+  if (isGridLocked) {
+    console.log("locked");
+    // Calculate the new size of each square
+    const squareSize = Math.min(
+      Math.floor((mazeContainer.offsetWidth - offset) / nbCols),
+      Math.floor((mazeContainer.offsetHeight - offset) / nbRows)
+    );
 
-  // Update the size of each cell
-  for (let cell of cells) {
-    cell.style.width = `${squareSize}px`;
-    cell.style.height = `${squareSize}px`;
+    maze.style.width = `${squareSize * nbCols}px`;
+    maze.style.height = `${squareSize * nbRows}px`;
+
+    // Update the size of each cell
+    for (let cell of cells) {
+      cell.style.width = `${squareSize}px`;
+      cell.style.height = `${squareSize}px`;
+    }
+  } else {
+    console.log("unlocked");
+    maze.innerHTML = "";
+    generateGrid();
   }
 }
 
