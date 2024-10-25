@@ -4,7 +4,7 @@ const offset = 30;
 const defaultSquareSize = 45;
 
 let isMouseDown = false;
-let drawingMode = "pen";
+let drawingMode = "paintbrush";
 
 // Function to generate the grid of the maze (rows and columns, colors, svg)
 function generateGrid(rows, cols) {

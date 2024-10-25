@@ -230,17 +230,6 @@ a:hover::after {
     cursor: pointer;
 }
 
-.pen-button {
-    background-color: rgb(43, 45, 66);
-    border: solid 1px rgb(0, 0, 0);
-    transition: ease 0.1s;
-}
-
-.pen-button:hover {
-    transition: ease 0.3s;
-    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0);
-}
-
 .paintbrush-button {
     background-color: rgb(11, 133, 214);
     border: solid 1px rgb(41, 11, 214);
@@ -251,6 +240,17 @@ a:hover::after {
     transition: ease 0.3s;
     box-shadow: 0px 0px 10px 3px rgb(41, 11, 214);
 }
+
+.pen-button {
+    background-color: rgb(43, 45, 66);
+    border: solid 1px rgb(0, 0, 0);
+    transition: ease 0.1s;
+}    
+
+.pen-button:hover {
+    transition: ease 0.3s;
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0);
+}    
 
 .rubber-button {
     background-color: rgb(201, 201, 201);
