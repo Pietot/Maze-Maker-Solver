@@ -10,6 +10,7 @@ let drawingMode = "paintbrush";
 function generateGrid(rows, cols) {
   const mazeContainer = document.getElementById("maze-container");
   const maze = document.getElementById("maze");
+  maze.innerHTML = "";
 
   const defaultRows = Math.floor(
     (mazeContainer.offsetHeight - offset) / defaultSquareSize
@@ -30,10 +31,12 @@ function generateGrid(rows, cols) {
   if (nbCols <= 2) nbCols = 3;
 
   // Calculate the size of each square
-  const squareSize = defaultSquareSize ||Math.min(
-    Math.floor((mazeContainer.offsetWidth - offset) / nbCols),
-    Math.floor((mazeContainer.offsetHeight - offset) / nbRows)
-  );
+  const squareSize =
+    defaultSquareSize ||
+    Math.min(
+      Math.floor((mazeContainer.offsetWidth - offset) / nbCols),
+      Math.floor((mazeContainer.offsetHeight - offset) / nbRows)
+    );
 
   maze.style.width = `${squareSize * nbCols}px`;
   maze.style.height = `${squareSize * nbRows}px`;
@@ -114,8 +117,6 @@ function updateGrid() {
       cell.style.height = `${squareSize}px`;
     }
   } else {
-    console.log("unlocked");
-    maze.innerHTML = "";
     generateGrid();
   }
 }
@@ -142,6 +143,7 @@ function setButtons() {
       lockScreen.style.borderColor = "darkgreen";
       svg.src = "assets/lock-open.svg";
       svg.alt = "lock-open.svg";
+      generateGrid();
     } else {
       lockScreen.value = "1";
       lockScreen.style.backgroundColor = "red";
