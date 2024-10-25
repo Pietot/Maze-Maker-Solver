@@ -4,6 +4,7 @@ const offset = 30;
 const defaultSquareSize = 45;
 
 let isMouseDown = false;
+let drawingMode = "pen";
 
 // Function to generate the grid of the maze (rows and columns, colors, svg)
 function generateGrid(rows, cols) {
@@ -53,12 +54,12 @@ function generateGrid(rows, cols) {
       // Event listeners for adding/removing "wall" class
       cell.addEventListener("mousedown", function () {
         isMouseDown = true;
-        toggleWall(cell);
+        toggleCell(cell, drawingMode);
       });
 
       cell.addEventListener("mouseenter", function () {
         if (isMouseDown) {
-          toggleWall(cell);
+          toggleCell(cell, drawingMode);
         }
       });
 
@@ -74,11 +75,19 @@ function generateGrid(rows, cols) {
 }
 
 // Function to toggle the "wall" class on a cell
-function toggleWall(cell) {
-  if (cell.classList.contains("wall")) {
-    cell.classList.remove("wall");
+function toggleCell(cell, drawingMode) {
+  if (drawingMode === "pen") {
+    if (!cell.classList.contains("wall")) {
+      cell.classList.add("wall");
+    }
+  } else if (drawingMode === "paintbrush") {
+    if (cell.classList.contains("wall")) {
+      cell.classList.remove("wall");
+    } else {
+      cell.classList.add("wall");
+    }
   } else {
-    cell.classList.add("wall");
+    cell.classList.remove("wall");
   }
 }
 
@@ -103,7 +112,6 @@ function updateGrid() {
 
   // Update the size of each cell
   for (let cell of cells) {
-    console.log(cell, squareSize);
     cell.style.width = `${squareSize}px`;
     cell.style.height = `${squareSize}px`;
   }
@@ -140,9 +148,11 @@ function setButtons() {
     }
   };
 
-  // Manage the style of the buttons & the drawing mode 
+  // Manage the style of the buttons & the drawing mode
   document.addEventListener("DOMContentLoaded", function () {
-    const buttons = document.querySelectorAll(".action-button");
+    const buttons = Array.from(
+      document.querySelectorAll(".action-button")
+    ).slice(0, 3);
     buttons.forEach((button) => {
       button.addEventListener("click", function () {
         if (this.dataset.isToggle !== "1") {
@@ -154,10 +164,13 @@ function setButtons() {
           this.dataset.isToggle = "1";
           if (this.id === "pen") {
             this.style.boxShadow = "0px 0px 10px 3px rgba(0, 0, 0)";
+            drawingMode = "pen";
           } else if (this.id === "paintbrush") {
             this.style.boxShadow = "0px 0px 10px 3px rgb(41, 11, 214)";
+            drawingMode = "paintbrush";
           } else {
             this.style.boxShadow = "0px 0px 10px 3px rgba(255, 255, 255)";
+            drawingMode = "eraser";
           }
         }
       });
