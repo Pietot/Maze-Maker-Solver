@@ -74,18 +74,12 @@ function generateGrid(rows, cols) {
   });
 }
 
-// Function to toggle the "wall" class on a cell
+// Function to toggle the "wall" class on a cell depending on the drawing mode
 function toggleCell(cell, drawingMode) {
   if (drawingMode === "pen") {
-    if (!cell.classList.contains("wall")) {
-      cell.classList.add("wall");
-    }
+    cell.classList.add("wall");
   } else if (drawingMode === "paintbrush") {
-    if (cell.classList.contains("wall")) {
-      cell.classList.remove("wall");
-    } else {
-      cell.classList.add("wall");
-    }
+    cell.classList.toggle("wall");
   } else {
     cell.classList.remove("wall");
   }
