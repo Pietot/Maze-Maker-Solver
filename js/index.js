@@ -70,11 +70,7 @@ function generateGrid(rows, cols) {
     }
     maze.appendChild(row);
   }
-
-  // Stop the drawing when mouse is released
-  document.addEventListener("mouseup", function () {
-    isMouseDown = false;
-  });
+  setStartEnd();
 }
 
 // Function to toggle the "wall" class on a cell depending on the drawing mode
@@ -101,7 +97,6 @@ function updateGrid() {
   const isGridLocked = document.getElementById("lock").value === "1";
 
   if (isGridLocked) {
-    console.log("locked");
     // Calculate the new size of each square
     const squareSize = Math.min(
       Math.floor((mazeContainer.offsetWidth - offset) / nbCols),
@@ -154,33 +149,49 @@ function setButtons() {
   };
 
   // Manage the style of the buttons & the drawing mode
-  document.addEventListener("DOMContentLoaded", function () {
-    const buttons = Array.from(
-      document.querySelectorAll(".action-button")
-    ).slice(0, 3);
-    buttons.forEach((button) => {
-      button.addEventListener("click", function () {
-        if (this.dataset.isToggle !== "1") {
-          buttons.forEach((btn) => {
-            btn.dataset.isToggle = "0";
-            btn.style.boxShadow = "";
-          });
+  const buttons = Array.from(document.querySelectorAll(".action-button")).slice(
+    0,
+    3
+  );
+  buttons.forEach((button) => {
+    button.addEventListener("click", function () {
+      if (this.dataset.isToggle !== "1") {
+        buttons.forEach((btn) => {
+          btn.dataset.isToggle = "0";
+          btn.style.boxShadow = "";
+        });
 
-          this.dataset.isToggle = "1";
-          if (this.id === "pen") {
-            this.style.boxShadow = "0px 0px 10px 3px rgba(0, 0, 0)";
-            drawingMode = "pen";
-          } else if (this.id === "paintbrush") {
-            this.style.boxShadow = "0px 0px 10px 3px rgb(41, 11, 214)";
-            drawingMode = "paintbrush";
-          } else {
-            this.style.boxShadow = "0px 0px 10px 3px rgba(255, 255, 255)";
-            drawingMode = "eraser";
-          }
+        this.dataset.isToggle = "1";
+        if (this.id === "pen") {
+          this.style.boxShadow = "0px 0px 10px 3px rgba(0, 0, 0)";
+          drawingMode = "pen";
+        } else if (this.id === "paintbrush") {
+          this.style.boxShadow = "0px 0px 10px 3px rgb(41, 11, 214)";
+          drawingMode = "paintbrush";
+        } else {
+          this.style.boxShadow = "0px 0px 10px 3px rgba(255, 255, 255)";
+          drawingMode = "eraser";
         }
-      });
+      }
     });
   });
+}
+
+// Function to set the start and end of the maze like align-content: center and justify-content: space-around
+function setStartEnd() {
+  const maze = document.getElementById("maze");
+  const rows = maze.children;
+  const centeredRow = rows[Math.floor(rows.length / 2)];
+  const centeredCells = centeredRow.children;
+
+  const startIndex = Math.floor(centeredCells.length / 4);
+  const endIndex = Math.floor(centeredCells.length * (3 / 4));
+
+  const start = centeredCells[startIndex];
+  const end = centeredCells[endIndex];
+
+  start.classList.add("start");
+  end.classList.add("end");
 }
 
 // Add event listener for window resize to update the grid
@@ -189,3 +200,8 @@ window.addEventListener("resize", updateGrid);
 // Initial grid generation
 generateGrid();
 setButtons();
+
+// Stop the drawing when mouse is released
+document.addEventListener("mouseup", function () {
+  isMouseDown = false;
+});
