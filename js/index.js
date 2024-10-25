@@ -75,6 +75,9 @@ function generateGrid(rows, cols) {
 
 // Function to toggle the "wall" class on a cell depending on the drawing mode
 function toggleCell(cell, drawingMode) {
+  if (cell.classList.contains("start") || cell.classList.contains("end")) {
+    return;
+  }
   if (drawingMode === "pen") {
     cell.classList.add("wall");
   } else if (drawingMode === "paintbrush") {
