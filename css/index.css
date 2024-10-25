@@ -170,7 +170,7 @@ a:hover::after {
     align-items: center;
     appearance: none;
     background-color: #3EB2FD;
-    background-image: linear-gradient(1deg, #4F58FD, #149BF3 99%);
+    background-image: linear-gradient(1deg, #4F58FD, #149BF3);
     background-size: calc(100% + 20px) calc(100% + 20px);
     border-radius: 100px;
     border-width: 0;
@@ -213,7 +213,8 @@ a:hover::after {
 }
 
 .solve-button {
-    background-image: linear-gradient(1deg, #4CAF50, #8BC34A 99%);
+    background-image: linear-gradient(1deg, #4CAF50, #8BC34A);
+    margin-bottom: 11px;
 }
 
 .btn-actions {
@@ -245,12 +246,12 @@ a:hover::after {
     background-color: rgb(43, 45, 66);
     border: solid 1px rgb(0, 0, 0);
     transition: ease 0.1s;
-}    
+}
 
 .pen-button:hover {
     transition: ease 0.3s;
     box-shadow: 0px 0px 10px 3px rgba(0, 0, 0);
-}    
+}
 
 .rubber-button {
     background-color: rgb(201, 201, 201);
