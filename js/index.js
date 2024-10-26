@@ -5,6 +5,7 @@ const defaultSquareSize = 45;
 
 let isMouseDown = false;
 let drawingMode = "paintbrush";
+let lastTouchedCell = null;
 
 // Function to generate the grid of the maze (rows and columns, colors, svg)
 function generateGrid(rows, cols) {
@@ -59,10 +60,37 @@ function generateGrid(rows, cols) {
         isMouseDown = true;
         toggleCell(cell, drawingMode);
       });
+      cell.addEventListener("touchstart", function (e) {
+        // Prevents scrolling on mobile
+        e.preventDefault();
+        isMouseDown = true;
+        lastTouchedCell = cell;
+        toggleCell(cell, drawingMode);
+      });
 
       cell.addEventListener("mouseenter", function () {
         if (isMouseDown) {
           toggleCell(cell, drawingMode);
+        }
+      });
+      cell.addEventListener("touchmove", function (e) {
+        // Prevents scrolling on mobile
+        e.preventDefault();
+        if (isMouseDown) {
+          const touch = e.touches[0];
+          const targetCell = document.elementFromPoint(
+            touch.clientX,
+            touch.clientY
+          );
+          if (
+            targetCell &&
+            (targetCell.classList.contains("cell1") ||
+              targetCell.classList.contains("cell2")) &&
+            targetCell !== lastTouchedCell
+          ) {
+            lastTouchedCell = targetCell;
+            toggleCell(targetCell, drawingMode);
+          }
         }
       });
 
@@ -204,7 +232,11 @@ window.addEventListener("resize", updateGrid);
 generateGrid();
 setButtons();
 
-// Stop the drawing when mouse is released
+// Stop the drawing when mouse or touch is released
 document.addEventListener("mouseup", function () {
   isMouseDown = false;
+});
+document.addEventListener("touchend", function () {
+  isMouseDown = false;
+  lastTouchedCell = null;
 });
