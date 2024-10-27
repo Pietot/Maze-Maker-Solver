@@ -1,3 +1,4 @@
 Add a field in the settings idk where where the user can set the number of row/column. This will allow the user to make the maze bigger or smaller.
 Add a button to lock the screen so the maze don't reset on resize.
 Move the start and end freely.
+For mergValues function, take the selected cell with the most color in the maze.
