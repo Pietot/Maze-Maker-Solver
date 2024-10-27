@@ -149,12 +149,12 @@ function updateGrid() {
 function setButtons() {
   // When the button with id "trash" is clicked, remove all walls
   const clear = document.getElementById("trash");
-  clear.onclick = function () {
+  clear.onclick = () => {
     const maze = document.getElementById("maze");
-    const walls = maze.getElementsByClassName("wall");
-    while (walls.length > 0) {
-      walls[0].classList.remove("wall");
-    }
+    maze.querySelectorAll(".wall").forEach((cell) => removeWall(cell));
+    Array.from(maze.querySelectorAll(".cell1, .cell2"))
+      .filter((div) => div.style.backgroundColor)
+      .forEach((cell) => (cell.style.backgroundColor = ""));
   };
 
   // When the button with id "lock" is clicked, change the way to update the grid
