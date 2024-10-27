@@ -118,9 +118,7 @@ function toggleCell(cell, drawingMode) {
 function updateGrid() {
   const mazeContainer = document.getElementById("maze-container");
   const maze = document.getElementById("maze");
-  const cells1 = maze.getElementsByClassName("cell1");
-  const cells2 = maze.getElementsByClassName("cell2");
-  const cells = [...cells1, ...cells2];
+  const cells = maze.querySelectorAll(".cell1, .cell2");
 
   const nbRows = maze.childElementCount;
   const nbCols = maze.firstChild.childElementCount;
