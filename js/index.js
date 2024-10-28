@@ -183,7 +183,7 @@ function setButtons() {
     3
   );
   buttons.forEach((button) => {
-    button.addEventListener("click", function () {
+    button.onclick = function () {
       if (this.dataset.isToggle !== "1") {
         buttons.forEach((btn) => {
           btn.dataset.isToggle = "0";
@@ -202,9 +202,46 @@ function setButtons() {
           drawingMode = "eraser";
         }
       }
-    });
+    };
   });
 }
+
+// Download the maze as a text file
+document.getElementById("download").onclick = function () {
+  const maze = document.getElementById("maze");
+  const rows = maze.children;
+
+  let mazeString = "[";
+  for (let i = 0; i < rows.length; i++) {
+    mazeString += "[";
+    const cols = rows[i].children;
+    for (let j = 0; j < cols.length; j++) {
+      if (cols[j].classList.contains("solution")) {
+        mazeString += "2,";
+      } else if (cols[j].classList.contains("wall")) {
+        mazeString += "1,";
+      } else {
+        mazeString += "0,";
+      }
+    }
+    // Delete the last comma
+    mazeString = mazeString.slice(0, -1);
+    mazeString += "]\n";
+  }
+  // Delete the last break line
+  mazeString = mazeString.slice(0, -1);
+  mazeString += "]";
+
+  const blob = new Blob([mazeString], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "maze.txt";
+  a.click();
+
+  URL.revokeObjectURL(url);
+};
 
 // Function to set the start and end of the maze like align-content: center and justify-content: space-around
 function setStartEnd() {
