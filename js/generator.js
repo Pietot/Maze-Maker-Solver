@@ -7,6 +7,11 @@ document.getElementById("generate").addEventListener("click", function () {
       replaceStartEnd();
       kruskal();
       break;
+    case "rdfs":
+      clearGrid();
+      replaceStartEnd();
+      rdfs();
+      break;
     case "simplified_prim":
       clearGrid();
       replaceStartEnd();
@@ -66,6 +71,14 @@ document.getElementById("generate").addEventListener("click", function () {
       break;
   }
 });
+
+function getRandomCell(maze) {
+  const rows = maze.children;
+  const randomRow = Math.floor(Math.random() * ((rows.length - 2) / 2)) * 2 + 1;
+  const randomColumn =
+    Math.floor(Math.random() * ((rows[0].children.length - 2) / 2)) * 2 + 1;
+  return rows[randomRow].children[randomColumn];
+}
 
 function replaceStartEnd() {
   const maze = document.getElementById("maze");
@@ -197,4 +210,8 @@ async function kruskal() {
     }
   }
   removeColors(maze);
+}
+
+async function rdfs(params) {
+  
 }
