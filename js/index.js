@@ -153,8 +153,10 @@ function setButtons() {
     const maze = document.getElementById("maze");
     maze.querySelectorAll(".wall").forEach((cell) => removeWall(cell));
     Array.from(maze.querySelectorAll(".cell1, .cell2"))
-      .filter((div) => div.style.backgroundColor)
-      .forEach((cell) => (cell.style.backgroundColor = ""));
+      .forEach((cell) => {
+        cell.style.backgroundColor = "";
+        cell.classList.remove("visited");
+      });
   };
 
   // When the button with id "lock" is clicked, change the way to update the grid
