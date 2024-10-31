@@ -8,7 +8,7 @@ document.getElementById("generate").addEventListener("click", function () {
       kruskal();
       break;
     case "rdfs":
-      clearGrid();
+      fillGrid();
       replaceStartEnd();
       rdfs();
       break;
@@ -77,6 +77,7 @@ function getRandomCell(maze) {
   const randomRow = Math.floor(Math.random() * ((rows.length - 2) / 2)) * 2 + 1;
   const randomColumn =
     Math.floor(Math.random() * ((rows[0].children.length - 2) / 2)) * 2 + 1;
+  console.log(randomRow, randomColumn);
   return rows[randomRow].children[randomColumn];
 }
 
@@ -102,9 +103,17 @@ function removeWall(cell) {
 function clearGrid() {
   const maze = document.getElementById("maze");
   maze.querySelectorAll(".wall").forEach((cell) => removeWall(cell));
-  Array.from(maze.querySelectorAll("div"))
-    .filter((div) => div.style.backgroundColor)
-    .forEach((cell) => (cell.style.backgroundColor = ""));
+  Array.from(maze.querySelectorAll("div")).forEach((cell) => {
+    cell.style.backgroundColor = "";
+    cell.classList.remove("visited");
+  });
+}
+
+function fillGrid() {
+  const maze = document.getElementById("maze");
+  clearGrid();
+  const cells = maze.querySelectorAll(".cell1, .cell2");
+  cells.forEach((cell) => cell.classList.add("wall"));
 }
 
 function getRandomColor() {
@@ -148,6 +157,31 @@ function getBreakableWalls(maze) {
 function removeColors(maze) {
   const cells = maze.querySelectorAll(".cell1, .cell2");
   cells.forEach((cell) => (cell.style.backgroundColor = ""));
+}
+
+function getNeighbors(maze, cell) {
+  const [row, col] = getCellPosition(cell);
+  const rows = maze.children;
+  const neighbors = [];
+  if (row > 1 && rows[row - 2].children[col].classList.contains("wall")) {
+    neighbors.push(rows[row - 2].children[col]);
+  }
+  if (
+    col < rows[0].children.length - 2 &&
+    rows[row].children[col + 2].classList.contains("wall")
+  ) {
+    neighbors.push(rows[row].children[col + 2]);
+  }
+  if (
+    row < rows.length - 2 &&
+    rows[row + 2].children[col].classList.contains("wall")
+  ) {
+    neighbors.push(rows[row + 2].children[col]);
+  }
+  if (col > 1 && rows[row].children[col - 2].classList.contains("wall")) {
+    neighbors.push(rows[row].children[col - 2]);
+  }
+  return neighbors;
 }
 
 async function mergeValues(wall, values) {
@@ -212,6 +246,34 @@ async function kruskal() {
   removeColors(maze);
 }
 
-async function rdfs(params) {
-  
+async function rdfs() {
+  const maze = document.getElementById("maze");
+  const start = getRandomCell(maze);
+  let stack = [start];
+  removeWall(start);
+  while (stack.length) {
+    const currentCell = stack[stack.length - 1];
+    const neighbors = getNeighbors(maze, currentCell);
+    if (neighbors.length) {
+      const neighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+      const [row, col] = getCellPosition(neighbor);
+      const [row2, col2] = getCellPosition(currentCell);
+      const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
+      removeWall(wall);
+      removeWall(neighbor);
+      stack.push(wall);
+      stack.push(neighbor);
+    } else {
+      const wall = stack.pop();
+      wall.classList.add("visited");
+      const visited = stack.pop();
+      if (stack.length) {
+        visited.classList.add("visited");
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 40));
+  }
+  maze
+    .querySelectorAll(".visited")
+    .forEach((cell) => cell.classList.remove("visited"));
 }
