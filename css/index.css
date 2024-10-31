@@ -335,6 +335,14 @@ a:hover::after {
     background-color: rgb(231, 231, 233);
 }
 
+.cell1.visited {
+    background-color: rgb(164, 215, 246);
+}
+
+.cell2.visited {
+    background-color: rgb(152, 203, 235);
+}
+
 .start {
     background-image: url(../assets/start.svg);
     background-size: 75%;
