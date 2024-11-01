@@ -156,6 +156,7 @@ function setButtons() {
       .forEach((cell) => {
         cell.style.backgroundColor = "";
         cell.classList.remove("visited");
+        cell.removeAttribute("opacity")
       });
   };
 
