@@ -1,9 +1,100 @@
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  // Method to add an element to the heap
+  push(value) {
+    this.heap.push(value);
+    this.heapifyUp();
+  }
+
+  // Method to remove the smallest element from the heap
+  pop() {
+    if (this.heap.length === 0) return null;
+    if (this.heap.length === 1) return this.heap.pop();
+
+    const min = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.heapifyDown();
+    return min;
+  }
+
+  // Method to reorganize the heap after an insertion
+  heapifyUp() {
+    let index = this.heap.length - 1;
+    while (
+      this.getParentIndex(index) >= 0 &&
+      // Comparison based on the weight
+      this.heap[index][2] < this.heap[this.getParentIndex(index)][2]
+    ) {
+      this.swap(index, this.getParentIndex(index));
+      index = this.getParentIndex(index);
+    }
+  }
+
+  // Method to reorganize the heap after a removal
+  heapifyDown() {
+    let index = 0;
+    while (this.getLeftChildIndex(index) < this.heap.length) {
+      let smallerChildIndex = this.getLeftChildIndex(index);
+      if (
+        this.getRightChildIndex(index) < this.heap.length &&
+        this.heap[this.getRightChildIndex(index)][2] <
+          // Comparison based on the weight
+          this.heap[smallerChildIndex][2]
+      ) {
+        smallerChildIndex = this.getRightChildIndex(index);
+      }
+
+      // Comparison based on the weight
+      if (this.heap[index][2] <= this.heap[smallerChildIndex][2]) break;
+
+      this.swap(index, smallerChildIndex);
+      index = smallerChildIndex;
+    }
+  }
+
+  // Method to get the parent index of an element
+  getParentIndex(index) {
+    return Math.floor((index - 1) / 2);
+  }
+
+  // Method to get the left child index of an element
+  getLeftChildIndex(index) {
+    return 2 * index + 1;
+  }
+
+  // Method to get the right child index of an element
+  getRightChildIndex(index) {
+    return 2 * index + 2;
+  }
+
+  // Method to swap two elements in the heap
+  swap(index1, index2) {
+    [this.heap[index1], this.heap[index2]] = [
+      this.heap[index2],
+      this.heap[index1],
+    ];
+  }
+
+  // Method to get the size of the heap
+  size() {
+    return this.heap.length;
+  }
+
+  // Method to check if the heap is empty
+  isEmpty() {
+    return this.heap.length === 0;
+  }
+}
+
 document.getElementById("generate").addEventListener("click", function () {
   const select = document.getElementById("select-algorithm");
   const algorithm = select.options[select.selectedIndex].value;
   switch (algorithm) {
     case "kruskal":
-      clearGrid();
+      scultGrid();
       replaceStartEnd();
       kruskal();
       break;
@@ -18,7 +109,7 @@ document.getElementById("generate").addEventListener("click", function () {
       simplifiedPrim();
       break;
     case "true_prim":
-      clearGrid();
+      scultGrid();
       replaceStartEnd();
       truePrim();
       break;
@@ -108,6 +199,18 @@ function clearGrid() {
   });
 }
 
+function scultGrid() {
+  fillGrid();
+  const maze = document.getElementById("maze");
+  const cells = maze.querySelectorAll(".cell1, .cell2");
+  cells.forEach((cell) => {
+    const [row, col] = getCellPosition(cell);
+    if (row % 2 === 1 && col % 2 === 1) {
+      cell.classList.remove("wall");
+    }
+  });
+}
+
 function fillGrid() {
   const maze = document.getElementById("maze");
   clearGrid();
@@ -187,29 +290,48 @@ function getNeighborsWithDirection(maze, cell) {
   const [row, col] = getCellPosition(cell);
   const rows = maze.children;
   const neighbors = [];
-  if (row > 1 && rows[row - 2].children[col].classList.contains("wall")) {
+  if (
+    (row > 1 && rows[row - 2].children[col].classList.contains("wall")) ||
+    (row > 1 && rows[row - 2].children[col].getAttribute("opacity"))
+  ) {
     // Up
     neighbors.push([rows[row - 2].children[col], [-1, 0]]);
   }
   if (
-    col < rows[0].children.length - 2 &&
-    rows[row].children[col + 2].classList.contains("wall")
+    (col < rows[0].children.length - 2 &&
+      rows[row].children[col + 2].classList.contains("wall")) ||
+    (col < rows[0].children.length - 2 &&
+      rows[row].children[col + 2].getAttribute("opacity"))
   ) {
     // Right
     neighbors.push([rows[row].children[col + 2], [0, 1]]);
   }
   if (
-    row < rows.length - 2 &&
-    rows[row + 2].children[col].classList.contains("wall")
+    (row < rows.length - 2 &&
+      rows[row + 2].children[col].classList.contains("wall")) ||
+    (row < rows.length - 2 &&
+      rows[row + 2].children[col].getAttribute("opacity"))
   ) {
     // Down
     neighbors.push([rows[row + 2].children[col], [1, 0]]);
   }
-  if (col > 1 && rows[row].children[col - 2].classList.contains("wall")) {
+  if (
+    (col > 1 && rows[row].children[col - 2].classList.contains("wall")) ||
+    (col > 1 && rows[row].children[col - 2].getAttribute("opacity"))
+  ) {
     // Left
     neighbors.push([rows[row].children[col - 2], [0, -1]]);
   }
   return neighbors;
+}
+
+function getOpacityFromRgba(color) {
+  const rgbaRegex = /^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d*\.?\d+)\)$/;
+  const match = color.match(rgbaRegex);
+  if (match) {
+    return parseFloat(match[4]);
+  }
+  return null;
 }
 
 async function mergeValues(wall, values) {
@@ -236,19 +358,11 @@ async function kruskal() {
   const rows = maze.children;
   let breakableWalls = getBreakableWalls(maze);
 
-  for (let i = 0; i < rows.length; i++) {
-    const rowCells = rows[i].children;
-    if (i === 0 || i === rows.length - 1) {
-      for (let cell of rowCells) addWall(cell);
-    } else {
-      addWall(rowCells[0]);
-      addWall(rowCells[rowCells.length - 1]);
-      for (let j = 1; j < rowCells.length - 1; j++) {
-        if (j % 2 === 0 || i % 2 === 0) addWall(rowCells[j]);
-        else rowCells[j].style.backgroundColor = getRandomColor();
-      }
+  maze.querySelectorAll(".cell1, .cell2").forEach((cell) => {
+    if (!cell.classList.contains("wall")) {
+      cell.style.backgroundColor = getRandomColor();
     }
-  }
+  });
 
   for (let wall of breakableWalls) {
     const [row, column] = getCellPosition(wall);
@@ -267,7 +381,7 @@ async function kruskal() {
         setTimeout(() => {
           mergeValues(wall, values);
           resolve();
-        }, 40);
+        }, 25);
       });
     }
   }
@@ -299,7 +413,7 @@ async function rdfs() {
         visited.classList.add("visited");
       }
     }
-    await new Promise((resolve) => setTimeout(resolve, 40));
+    await new Promise((resolve) => setTimeout(resolve, 25));
   }
   maze
     .querySelectorAll(".visited")
@@ -321,10 +435,51 @@ async function simplifiedPrim() {
         maze.children[row - direction[0]].children[col - direction[1]];
       removeWall(wall);
       removeWall(neighbor);
-      await new Promise((resolve) => setTimeout(resolve, 40));
+      await new Promise((resolve) => setTimeout(resolve, 25));
     }
     neighbors = neighbors.filter((n) => n[0] !== neighbor);
     neighbors.push(...getNeighborsWithDirection(maze, neighbor));
-    console.log(1);
+  }
+}
+
+async function truePrim() {
+  let neighbors = new MinHeap();
+  const maze = document.getElementById("maze");
+  const start = getRandomCell(maze);
+
+  maze.querySelectorAll(".cell1, .cell2").forEach((cell) => {
+    if (!cell.classList.contains("wall")) {
+      rdmOpacity = Math.random();
+      cell.style.backgroundColor = `rgba(217, 4, 41, ${rdmOpacity})`;
+      cell.setAttribute("opacity", rdmOpacity);
+    }
+  });
+
+  start.style.backgroundColor = "";
+  start.removeAttribute("opacity");
+
+  for (let neighbor of getNeighborsWithDirection(maze, start)) {
+    const weight = getOpacityFromRgba(neighbor[0].style.backgroundColor);
+    neighbors.push([neighbor[0], neighbor[1], weight]);
+  }
+
+  while (neighbors.heap.length) {
+    const [neighbor, direction] = neighbors.pop();
+    if (neighbor.style.backgroundColor !== "") {
+      const [row, col] = getCellPosition(neighbor);
+      const wall =
+        maze.children[row - direction[0]].children[col - direction[1]];
+      removeWall(wall);
+      neighbor.style.backgroundColor = "";
+      await new Promise((resolve) => setTimeout(resolve, 25));
+      for (let next_neighbor of getNeighborsWithDirection(maze, neighbor)) {
+        if (next_neighbor[0].style.backgroundColor !== "") {
+          const weight = getOpacityFromRgba(
+            next_neighbor[0].style.backgroundColor
+          );
+          neighbors.push([next_neighbor[0], next_neighbor[1], weight]);
+        }
+      }
+    }
   }
 }
