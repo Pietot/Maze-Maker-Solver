@@ -311,31 +311,32 @@ function getNeighborsWithDirection(maze, cell) {
   const [row, col] = getCellPosition(cell);
   const rows = maze.children;
   const neighbors = [];
+  // Up
   if (
     (row > 1 && rows[row - 2].children[col].classList.contains("wall")) ||
     (row > 1 && rows[row - 2].children[col].getAttribute("opacity"))
   ) {
-    // Up
     neighbors.push([rows[row - 2].children[col], [-1, 0]]);
   }
+  // Right
   if (
     (col < rows[0].children.length - 2 &&
       rows[row].children[col + 2].classList.contains("wall")) ||
     (col < rows[0].children.length - 2 &&
       rows[row].children[col + 2].getAttribute("opacity"))
   ) {
-    // Right
     neighbors.push([rows[row].children[col + 2], [0, 1]]);
   }
+  // Down
   if (
     (row < rows.length - 2 &&
       rows[row + 2].children[col].classList.contains("wall")) ||
     (row < rows.length - 2 &&
       rows[row + 2].children[col].getAttribute("opacity"))
   ) {
-    // Down
     neighbors.push([rows[row + 2].children[col], [1, 0]]);
   }
+  // Left
   if (
     (col > 1 && rows[row].children[col - 2].classList.contains("wall")) ||
     (col > 1 && rows[row].children[col - 2].getAttribute("opacity"))
