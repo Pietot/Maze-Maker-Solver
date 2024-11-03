@@ -187,13 +187,13 @@ function setButtons() {
   );
   buttons.forEach((button) => {
     button.onclick = function () {
-      if (this.dataset.isToggle !== "1") {
+      if (this.dataset.isToggled !== "1") {
         buttons.forEach((btn) => {
-          btn.dataset.isToggle = "0";
+          btn.dataset.isToggled = "0";
           btn.style.boxShadow = "";
         });
 
-        this.dataset.isToggle = "1";
+        this.dataset.isToggled = "1";
         if (this.id === "pen") {
           this.style.boxShadow = "0px 0px 10px 3px rgba(0, 0, 0)";
           drawingMode = "pen";
