@@ -131,7 +131,7 @@ document.getElementById("generate").addEventListener("click", function () {
       truePrim();
       break;
     case "hunt_and_kill":
-      clearGrid();
+      fillGrid();
       replaceStartEnd();
       huntAndKill();
       break;
@@ -341,8 +341,36 @@ function getNeighborsWithDirection(maze, cell) {
     (col > 1 && rows[row].children[col - 2].classList.contains("wall")) ||
     (col > 1 && rows[row].children[col - 2].getAttribute("opacity"))
   ) {
-    // Left
     neighbors.push([rows[row].children[col - 2], [0, -1]]);
+  }
+  return neighbors;
+}
+
+function getConnection(maze, cell) {
+  const [row, col] = getCellPosition(cell);
+  const rows = maze.children;
+  const neighbors = [];
+  // Up
+  if (row > 1 && !rows[row - 2].children[col].classList.contains("wall")) {
+    neighbors.push(rows[row - 2].children[col]);
+  }
+  // Right
+  if (
+    col < rows[0].children.length - 2 &&
+    !rows[row].children[col + 2].classList.contains("wall")
+  ) {
+    neighbors.push(rows[row].children[col + 2]);
+  }
+  // Down
+  if (
+    row < rows.length - 2 &&
+    !rows[row + 2].children[col].classList.contains("wall")
+  ) {
+    neighbors.push(rows[row + 2].children[col]);
+  }
+  // Left
+  if (col > 1 && !rows[row].children[col - 2].classList.contains("wall")) {
+    neighbors.push(rows[row].children[col - 2]);
   }
   return neighbors;
 }
@@ -502,6 +530,65 @@ async function truePrim() {
           neighbors.push([next_neighbor[0], next_neighbor[1], weight]);
         }
       }
+    }
+  }
+}
+
+async function huntAndKill() {
+  const maze = document.getElementById("maze");
+  const huntScan = document.getElementById("hunt");
+  const start = getRandomCell(maze);
+  let cell = start;
+  removeWall(cell);
+
+  async function hunt() {
+    const rows = maze.children;
+    huntScan.style.display = "block";
+    for (let i = 1; i < rows.length - 1; i += 2) {
+      huntScan.style.top = (i + 1) * cell.offsetHeight + "px";
+      await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+      for (let j = 1; j < rows[i].children.length; j += 2) {
+        const cell = rows[i].children[j];
+        if (cell.classList.contains("wall")) {
+          const neighbors = getConnection(maze, cell);
+          if (neighbors.length) {
+            const neighbor =
+              neighbors[Math.floor(Math.random() * neighbors.length)];
+            const [row, col] = getCellPosition(neighbor);
+            const [row2, col2] = getCellPosition(cell);
+            const wall =
+              maze.children[(row + row2) / 2].children[(col + col2) / 2];
+            await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+            huntScan.style.display = "none";
+            huntScan.style.top = 2 * cell.offsetHeight + "px";
+            await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+            removeWall(wall);
+            removeWall(cell);
+            await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+            return cell;
+          }
+        }
+      }
+      await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+    }
+    huntScan.style.display = "none";
+    huntScan.style.top = 2 * cell.offsetHeight + "px";
+    return null;
+  }
+
+  while (cell) {
+    const neighbors = getNeighbors(maze, cell);
+    if (neighbors.length) {
+      const neighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+      const [row, col] = getCellPosition(cell);
+      const [row2, col2] = getCellPosition(neighbor);
+      const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
+      removeWall(wall);
+      removeWall(neighbor);
+      await new Promise((resolve) => setTimeout(resolve, speed));
+      cell = neighbor;
+    } else {
+      cell = await hunt();
     }
   }
 }
