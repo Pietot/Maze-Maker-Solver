@@ -293,6 +293,21 @@ a:hover::after {
     -webkit-user-drag: none;
 }
 
+.speed-button {
+    background-color: rgb(123, 0, 255);
+    border: solid 1px rgb(62, 0, 128);
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1rem;
+    color: rgb(237, 242, 244);
+    transition: all 0.3s ease;
+}
+
+.speed-button:hover {
+    box-shadow: 0px 0px 10px 3px rgb(62, 0, 128);
+    transition: all 0.3s ease;
+}
+
 .settings-info {
     display: flex;
     flex-direction: column;
