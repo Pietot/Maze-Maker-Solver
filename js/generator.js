@@ -89,6 +89,23 @@ class MinHeap {
   }
 }
 
+let speed = 50;
+const speedBtn = document.querySelectorAll(".speed-button");
+speedBtn.forEach((btn) => {
+  btn.onclick = function () {
+    if (this.dataset.isToggled !== "1") {
+      speedBtn.forEach((btn) => {
+        btn.dataset.isToggled = "0";
+        btn.style.boxShadow = "";
+      });
+
+      this.dataset.isToggled = "1";
+      this.style.boxShadow = "0px 0px 10px 3px rgb(62, 0, 128)";
+      speed = parseInt(this.getAttribute("value"));
+    }
+  };
+});
+
 document.getElementById("generate").addEventListener("click", function () {
   const select = document.getElementById("select-algorithm");
   const algorithm = select.options[select.selectedIndex].value;
@@ -381,7 +398,7 @@ async function kruskal() {
         setTimeout(() => {
           mergeValues(wall, values);
           resolve();
-        }, 25);
+        }, speed);
       });
     }
   }
@@ -413,7 +430,7 @@ async function rdfs() {
         visited.classList.add("visited");
       }
     }
-    await new Promise((resolve) => setTimeout(resolve, 25));
+    await new Promise((resolve) => setTimeout(resolve, speed));
   }
   maze
     .querySelectorAll(".visited")
@@ -435,7 +452,7 @@ async function simplifiedPrim() {
         maze.children[row - direction[0]].children[col - direction[1]];
       removeWall(wall);
       removeWall(neighbor);
-      await new Promise((resolve) => setTimeout(resolve, 25));
+      await new Promise((resolve) => setTimeout(resolve, speed));
     }
     neighbors = neighbors.filter((n) => n[0] !== neighbor);
     neighbors.push(...getNeighborsWithDirection(maze, neighbor));
@@ -471,7 +488,7 @@ async function truePrim() {
         maze.children[row - direction[0]].children[col - direction[1]];
       removeWall(wall);
       neighbor.style.backgroundColor = "";
-      await new Promise((resolve) => setTimeout(resolve, 25));
+      await new Promise((resolve) => setTimeout(resolve, speed));
       for (let next_neighbor of getNeighborsWithDirection(maze, neighbor)) {
         if (next_neighbor[0].style.backgroundColor !== "") {
           const weight = getOpacityFromRgba(
