@@ -223,7 +223,7 @@ function scultGrid() {
   cells.forEach((cell) => {
     const [row, col] = getCellPosition(cell);
     if (row % 2 === 1 && col % 2 === 1) {
-      cell.classList.remove("wall");
+      removeWall(cell);
     }
   });
 }
@@ -355,7 +355,7 @@ async function mergeValues(wall, values) {
   const selectedCell = values[0];
   const cellToReplace = values[1];
   wall.style.backgroundColor = selectedCell.style.backgroundColor;
-  wall.classList.remove("wall");
+  removeWall(wall);
 
   const matchingCells = Array.from(
     maze.querySelectorAll(
