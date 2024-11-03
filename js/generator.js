@@ -282,21 +282,25 @@ function getNeighbors(maze, cell) {
   const [row, col] = getCellPosition(cell);
   const rows = maze.children;
   const neighbors = [];
+  // Up
   if (row > 1 && rows[row - 2].children[col].classList.contains("wall")) {
     neighbors.push(rows[row - 2].children[col]);
   }
+  // Right
   if (
     col < rows[0].children.length - 2 &&
     rows[row].children[col + 2].classList.contains("wall")
   ) {
     neighbors.push(rows[row].children[col + 2]);
   }
+  // Down
   if (
     row < rows.length - 2 &&
     rows[row + 2].children[col].classList.contains("wall")
   ) {
     neighbors.push(rows[row + 2].children[col]);
   }
+  // Left
   if (col > 1 && rows[row].children[col - 2].classList.contains("wall")) {
     neighbors.push(rows[row].children[col - 2]);
   }
