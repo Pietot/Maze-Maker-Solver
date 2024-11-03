@@ -376,6 +376,16 @@ a:hover::after {
     background-color: rgb(43, 45, 66);
 }
 
+.hunt {
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0);
+    box-shadow: 0 0 0 4px yellow;
+    border-radius: 10px;
+    pointer-events: none;
+    transition: all 0.1s ease-in-out;
+}
+
 .select-sprites {
     position: absolute;
     width: 0;
