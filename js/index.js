@@ -224,6 +224,16 @@ function setButtons() {
   });
 }
 
+function setHuntScan() {
+  const huntScan = document.getElementById("hunt");
+  const cell = document.getElementsByClassName("cell1")[0];
+
+  huntScan.style.width = maze.offsetWidth + cell.offsetWidth / 2 + "px";
+  huntScan.style.height = 1.5 * cell.offsetHeight + "px";
+  huntScan.style.top = 2 * cell.offsetHeight + "px";
+  huntScan.style.left = maze.offsetLeft - cell.offsetWidth / 4 + "px";
+}
+
 // Download the maze as a text file
 document.getElementById("download").onclick = function () {
   const maze = document.getElementById("maze");
@@ -284,6 +294,7 @@ window.addEventListener("resize", updateGrid);
 // Initial grid generation
 generateGrid();
 setButtons();
+setHuntScan();
 
 // Stop the drawing when mouse or touch is released
 document.addEventListener("mouseup", function () {
