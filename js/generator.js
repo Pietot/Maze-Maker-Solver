@@ -146,7 +146,7 @@ document.getElementById("generate").addEventListener("click", function () {
       iterativeDivision();
       break;
     case "binary_tree":
-      clearGrid();
+      fillGrid();
       replaceStartEnd();
       binaryTree();
       break;
@@ -658,9 +658,17 @@ async function iterativeDivision() {
       const entry = entries[Math.floor(Math.random() * entries.length)];
       const entryCoordinates = [entry, wallColumnIndex];
       maze.children[entry].children[wallColumnIndex].classList.remove("wall");
-      
-      stack.push([startIndex, [endIndex[0], wallColumnIndex - 1], entryCoordinates]);
-      stack.push([[startIndex[0], wallColumnIndex + 1], endIndex, entryCoordinates]);
+
+      stack.push([
+        startIndex,
+        [endIndex[0], wallColumnIndex - 1],
+        entryCoordinates,
+      ]);
+      stack.push([
+        [startIndex[0], wallColumnIndex + 1],
+        endIndex,
+        entryCoordinates,
+      ]);
     } else {
       // Like wall_rows = [i for i in range(start_index[0], endIndex[0] + 1)
       //                   if i not in (start_index[0], ban[0], end_index[0]) and i % 2 == 0
@@ -692,8 +700,41 @@ async function iterativeDivision() {
       const entryCoordinates = [wallRowIndex, entry];
       maze.children[wallRowIndex].children[entry].classList.remove("wall");
 
-      stack.push([startIndex, [wallRowIndex - 1, endIndex[1]], entryCoordinates]);
-      stack.push([[wallRowIndex + 1, startIndex[1]], endIndex, entryCoordinates]);
+      stack.push([
+        startIndex,
+        [wallRowIndex - 1, endIndex[1]],
+        entryCoordinates,
+      ]);
+      stack.push([
+        [wallRowIndex + 1, startIndex[1]],
+        endIndex,
+        entryCoordinates,
+      ]);
+    }
+  }
+}
+
+async function binaryTree() {
+  const maze = document.getElementById("maze");
+  const rows = maze.children;
+
+  for (let i = 1; i < rows.length - 1; i++) {
+    for (let j = 1; j < rows[i].children.length - 1; j++) {
+      if (i === 1 || j === 1) removeWall(rows[i].children[j]);
+    }
+  }
+
+  for (let i = 3; i < rows.length - 1; i += 2) {
+    for (let j = 3; j < rows[i].children.length - 1; j += 2) {
+      await new Promise((resolve) => setTimeout(resolve, speed));
+
+      if (Math.random() > 0.5) {
+        removeWall(rows[i - 1].children[j]);
+        removeWall(rows[i].children[j]);
+      } else {
+        removeWall(rows[i].children[j - 1]);
+        removeWall(rows[i].children[j]);
+      }
     }
   }
 }
