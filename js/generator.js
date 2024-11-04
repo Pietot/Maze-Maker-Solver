@@ -141,7 +141,7 @@ document.getElementById("generate").addEventListener("click", function () {
       eller();
       break;
     case "iterative_division":
-      clearGrid();
+      emptyGrid();
       replaceStartEnd();
       iterativeDivision();
       break;
@@ -214,6 +214,22 @@ function clearGrid() {
     cell.style.backgroundColor = "";
     cell.classList.remove("visited");
   });
+}
+
+function emptyGrid() {
+  clearGrid();
+  const maze = document.getElementById("maze");
+  const rows = maze.children;
+  const numRows = rows.length;
+  const numCols = rows[0].children.length;
+
+  for (let i = 0; i < numRows; i++) {
+    for (let j = 0; j < numCols; j++) {
+      if (i === 0 || i === numRows - 1 || j === 0 || j === numCols - 1) {
+        rows[i].children[j].classList.add("wall");
+      }
+    }
+  }
 }
 
 function scultGrid() {
@@ -589,6 +605,95 @@ async function huntAndKill() {
       cell = neighbor;
     } else {
       cell = await hunt();
+    }
+  }
+}
+
+async function iterativeDivision() {
+  function divideVertically(width, height) {
+    return width !== height ? width > height : Math.random() > 0.5;
+  }
+  stack = [
+    [
+      [1, 1],
+      [maze.children.length - 2, maze.children[0].children.length - 2],
+      [0, 0],
+    ],
+  ];
+  while (stack.length) {
+    const [startIndex, endIndex, ban] = stack.pop();
+    const height = endIndex[0] - startIndex[0];
+    const width = endIndex[1] - startIndex[1];
+    if (height < 2 || width < 2) {
+      continue;
+    }
+
+    if (divideVertically(width, height)) {
+      // Like wall_columns = [i for i in range(start_index[1], endIndex[1] + 1)
+      //                      if i not in (start_index[1], ban[1], end_index[1]) and i % 2 == 0
+      //                     ]
+      const wallColumns = Array.from(
+        { length: endIndex[1] - startIndex[1] + 1 },
+        (_, i) => startIndex[1] + i
+      ).filter(
+        (i) =>
+          i !== startIndex[1] &&
+          i !== ban[1] &&
+          i !== endIndex[1] &&
+          i % 2 === 0
+      );
+      const wallColumnIndex =
+        wallColumns[Math.floor(Math.random() * wallColumns.length)];
+      // Add walls to all column index cells
+      await new Promise((resolve) => setTimeout(resolve, speed));
+      for (let i = startIndex[0]; i <= endIndex[0]; i++) {
+        const cell = maze.children[i].children[wallColumnIndex];
+        addWall(cell);
+      }
+      await new Promise((resolve) => setTimeout(resolve, speed));
+      const entries = Array.from(
+        { length: endIndex[0] - startIndex[0] + 1 },
+        (_, i) => startIndex[0] + i
+      ).filter((i) => i % 2 === 1);
+      const entry = entries[Math.floor(Math.random() * entries.length)];
+      const entryCoordinates = [entry, wallColumnIndex];
+      maze.children[entry].children[wallColumnIndex].classList.remove("wall");
+      
+      stack.push([startIndex, [endIndex[0], wallColumnIndex - 1], entryCoordinates]);
+      stack.push([[startIndex[0], wallColumnIndex + 1], endIndex, entryCoordinates]);
+    } else {
+      // Like wall_rows = [i for i in range(start_index[0], endIndex[0] + 1)
+      //                   if i not in (start_index[0], ban[0], end_index[0]) and i % 2 == 0
+      //                  ]
+      const wallRows = Array.from(
+        { length: endIndex[0] - startIndex[0] + 1 },
+        (_, i) => startIndex[0] + i
+      ).filter(
+        (i) =>
+          i !== startIndex[0] &&
+          i !== ban[0] &&
+          i !== endIndex[0] &&
+          i % 2 === 0
+      );
+      const wallRowIndex =
+        wallRows[Math.floor(Math.random() * wallRows.length)];
+      // Add walls to all row index cells
+      await new Promise((resolve) => setTimeout(resolve, speed));
+      for (let i = startIndex[1]; i <= endIndex[1]; i++) {
+        const cell = maze.children[wallRowIndex].children[i];
+        addWall(cell);
+      }
+      await new Promise((resolve) => setTimeout(resolve, speed));
+      const entries = Array.from(
+        { length: endIndex[1] - startIndex[1] + 1 },
+        (_, i) => startIndex[1] + i
+      ).filter((i) => i % 2 === 1);
+      const entry = entries[Math.floor(Math.random() * entries.length)];
+      const entryCoordinates = [wallRowIndex, entry];
+      maze.children[wallRowIndex].children[entry].classList.remove("wall");
+
+      stack.push([startIndex, [wallRowIndex - 1, endIndex[1]], entryCoordinates]);
+      stack.push([[wallRowIndex + 1, startIndex[1]], endIndex, entryCoordinates]);
     }
   }
 }
