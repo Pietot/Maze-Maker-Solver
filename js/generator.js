@@ -151,7 +151,7 @@ document.getElementById("generate").addEventListener("click", function () {
       binaryTree();
       break;
     case "sidewinder":
-      clearGrid();
+      scultGrid();
       replaceStartEnd();
       sidewinder();
       break;
@@ -735,6 +735,44 @@ async function binaryTree() {
         removeWall(rows[i].children[j - 1]);
         removeWall(rows[i].children[j]);
       }
+    }
+  }
+}
+
+async function sidewinder() {
+  const rows = document.getElementById("maze").children;
+
+  Array.from(rows[1].children).slice(1, -1).forEach(removeWall);
+
+  const [northDirection, eastDirection] = [
+    [-1, 0],
+    [0, 1],
+  ];
+
+  let cells = [];
+
+  for (let i = 3; i < rows.length - 1; i += 2) {
+    for (let j = 1; j < rows[i].children.length - 1; j += 2) {
+      cells.push(rows[i].children[j]);
+      if (Math.random() <= 0.5 || j === rows[i].children.length - 2) {
+        const cellCoordinates = getCellPosition(
+          cells[Math.floor(Math.random() * cells.length)]
+        );
+        const wallCoordinates = [
+          cellCoordinates[0] + northDirection[0],
+          cellCoordinates[1] + northDirection[1],
+        ];
+        removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
+        cells = [];
+      } else {
+        const cellCoordinates = getCellPosition(rows[i].children[j]);
+        const wallCoordinates = [
+          cellCoordinates[0],
+          cellCoordinates[1] + eastDirection[1],
+        ];
+        removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
+      }
+      await new Promise((resolve) => setTimeout(resolve, speed));
     }
   }
 }
