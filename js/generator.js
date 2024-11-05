@@ -560,8 +560,12 @@ async function huntAndKill() {
   async function hunt() {
     const rows = maze.children;
     huntScan.style.display = "block";
+    await new Promise((resolve) => setTimeout(resolve, 2 * speed));
     for (let i = 1; i < rows.length - 1; i += 2) {
-      huntScan.style.top = (i + 1) * cell.offsetHeight + "px";
+      huntScan.style.top =
+        parseInt(huntScan.getAttribute("value")) +
+        (i + 1) * cell.offsetHeight +
+        "px";
       await new Promise((resolve) => setTimeout(resolve, 2 * speed));
       for (let j = 1; j < rows[i].children.length; j += 2) {
         const cell = rows[i].children[j];
@@ -576,7 +580,7 @@ async function huntAndKill() {
               maze.children[(row + row2) / 2].children[(col + col2) / 2];
             await new Promise((resolve) => setTimeout(resolve, 2 * speed));
             huntScan.style.display = "none";
-            huntScan.style.top = 2 * cell.offsetHeight + "px";
+            huntScan.style.top = huntScan.getAttribute("value") + "px";
             await new Promise((resolve) => setTimeout(resolve, 2 * speed));
             removeWall(wall);
             removeWall(cell);
@@ -588,7 +592,7 @@ async function huntAndKill() {
       await new Promise((resolve) => setTimeout(resolve, 2 * speed));
     }
     huntScan.style.display = "none";
-    huntScan.style.top = 2 * cell.offsetHeight + "px";
+    huntScan.style.top = huntScan.getAttribute("value") + "px";
     return null;
   }
 

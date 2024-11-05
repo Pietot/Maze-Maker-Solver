@@ -226,12 +226,15 @@ function setButtons() {
 
 function setHuntScan() {
   const huntScan = document.getElementById("hunt");
+  const maze = document.getElementById("maze");
+  const container = document.getElementById("maze-container");
   const cell = document.getElementsByClassName("cell1")[0];
 
   huntScan.style.width = maze.offsetWidth + cell.offsetWidth / 2 + "px";
   huntScan.style.height = 1.5 * cell.offsetHeight + "px";
-  huntScan.style.top = 2 * cell.offsetHeight + "px";
+  huntScan.style.top = container.offsetHeight - maze.offsetHeight + "px";
   huntScan.style.left = maze.offsetLeft - cell.offsetWidth / 4 + "px";
+  huntScan.setAttribute("value", container.offsetHeight - maze.offsetHeight);
 }
 
 // Download the maze as a text file
