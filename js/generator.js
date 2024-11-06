@@ -560,14 +560,13 @@ async function huntAndKill() {
   async function hunt() {
     const rows = maze.children;
     huntScan.style.display = "block";
-    await new Promise((resolve) => setTimeout(resolve, 2 * speed));
     for (let i = 1; i < rows.length - 1; i += 2) {
       huntScan.style.top =
         parseInt(huntScan.getAttribute("value")) +
-        (i + 1) * cell.offsetHeight +
+        (i - 1) * cell.offsetHeight +
         "px";
       await new Promise((resolve) => setTimeout(resolve, 2 * speed));
-      for (let j = 1; j < rows[i].children.length; j += 2) {
+      for (let j = 1; j < rows[i].children.length - 1; j += 2) {
         const cell = rows[i].children[j];
         if (cell.classList.contains("wall")) {
           const neighbors = getConnection(maze, cell);
