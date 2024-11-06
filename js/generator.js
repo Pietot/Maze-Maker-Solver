@@ -155,13 +155,8 @@ document.getElementById("generate").addEventListener("click", function () {
       replaceStartEnd();
       sidewinder();
       break;
-    case "growing_tree":
-      clearGrid();
-      replaceStartEnd();
-      growingTree();
-      break;
-    case "aldous":
-      clearGrid();
+    case "aldous-broder":
+      fillGrid();
       replaceStartEnd();
       aldousBroder();
       break;
@@ -358,6 +353,29 @@ function getNeighborsWithDirection(maze, cell) {
     (col > 1 && rows[row].children[col - 2].getAttribute("opacity"))
   ) {
     neighbors.push([rows[row].children[col - 2], [0, -1]]);
+  }
+  return neighbors;
+}
+
+function getAllNeighbors(maze, cell) {
+  const [row, col] = getCellPosition(cell);
+  const rows = maze.children;
+  const neighbors = [];
+  // Up
+  if (row > 2) {
+    neighbors.push(rows[row - 2].children[col]);
+  }
+  // Right
+  if (col < rows[0].children.length - 2) {
+    neighbors.push(rows[row].children[col + 2]);
+  }
+  // Down
+  if (row < rows.length - 2) {
+    neighbors.push(rows[row + 2].children[col]);
+  }
+  // Left
+  if (col > 2) {
+    neighbors.push(rows[row].children[col - 2]);
   }
   return neighbors;
 }
@@ -777,5 +795,29 @@ async function sidewinder() {
       }
       await new Promise((resolve) => setTimeout(resolve, speed));
     }
+  }
+}
+
+async function aldousBroder() {
+  const maze = document.getElementById("maze");
+  const start = getRandomCell(maze);
+  let cell = start;
+  const numberCell = Math.floor(maze.children.length / 2) * Math.floor(maze.children[0].children.length / 2);
+  removeWall(cell);
+  let visited = 1;
+  while (visited < numberCell) {
+    const neighbors = getAllNeighbors(maze, cell);
+    const rdmNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+    if (rdmNeighbor.classList.contains("wall")) {
+      const [row, col] = getCellPosition(rdmNeighbor);
+      const [row2, col2] = getCellPosition(cell);
+      const wall =
+        maze.children[(row + row2) / 2].children[(col + col2) / 2];
+      await new Promise((resolve) => setTimeout(resolve, speed));
+      removeWall(wall);
+      removeWall(rdmNeighbor);
+      visited++;
+    }
+    cell = rdmNeighbor;
   }
 }
