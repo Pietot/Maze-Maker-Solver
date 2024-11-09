@@ -37,6 +37,17 @@ a:hover::after {
     width: 100%;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 .container {
     display: flex;
     height: 100vh;
@@ -128,7 +139,6 @@ a:hover::after {
     border: 1px solid #c9cfd8;
     border-radius: 5px;
     background: #fff;
-    box-shadow: 0 1px 3px -2px #9098a9;
     cursor: pointer;
     font-family: sans-serif;
     font-size: 18px;
@@ -305,6 +315,47 @@ a:hover::after {
 .speed-button:hover {
     box-shadow: 0px 0px 10px 3px rgb(62, 0, 128);
     transition: all 0.3s ease;
+}
+
+.input-container {
+    position: relative;
+    display: inline-block;
+}
+
+.input-container input {
+    padding-right: 3em;
+    padding-left: 0.5em;
+    width: calc(200px - 3.5em - 4px);
+    height: 32px;
+    border: 1px solid #c9cfd8;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: all 150ms ease;
+}
+
+.input-container input:hover + span {
+    color: rgb(4, 167, 217);
+}
+
+.input-container input:focus + span {
+    color: rgb(4, 167, 217);
+}
+
+.input-container input:focus {
+    outline: none;
+    box-shadow: 0 0 0px 2px rgb(4, 167, 217);
+}
+
+.input-container span {
+    position: absolute;
+    right: 0.5em;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    color: #888;
+    pointer-events: none;
+    transition: color 150ms ease;
 }
 
 .settings-info {
