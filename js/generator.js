@@ -887,5 +887,4 @@ async function wilson() {
       wall.style.backgroundColor = rdmColor;
     }
   }
-
 }
