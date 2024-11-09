@@ -225,7 +225,7 @@ function setButtons() {
 }
 
 function setInputSpeed() {
-  const numElement = document.getElementById("duration");
+  const numElement = document.getElementById("speed");
   ["change", "input", "keyup", "keydown", "paste"].forEach((event) =>
     numElement.addEventListener(event, validateMax)
   );
