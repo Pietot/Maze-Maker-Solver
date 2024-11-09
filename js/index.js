@@ -224,6 +224,25 @@ function setButtons() {
   });
 }
 
+function setInputSpeed() {
+  const numElement = document.getElementById("duration");
+  ["change", "input", "keyup", "keydown", "paste"].forEach((event) =>
+    numElement.addEventListener(event, validateMax)
+  );
+
+  function validateMax() {
+    const value = parseInt(numElement.value, 10);
+    if (isNaN(value)) {
+      numElement.value = '';
+    } else if (value < 0) {
+      numElement.value = '';
+    } else if (value > 10000) {
+      numElement.value = 10000;
+    }
+    numElement.value = Math.round(numElement.value);
+  }
+}
+
 function setHuntScan() {
   const huntScan = document.getElementById("hunt");
   const maze = document.getElementById("maze");
@@ -297,6 +316,7 @@ window.addEventListener("resize", updateGrid);
 // Initial grid generation
 generateGrid();
 setButtons();
+setInputSpeed();
 setHuntScan();
 
 // Stop the drawing when mouse or touch is released
