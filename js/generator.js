@@ -89,8 +89,11 @@ class MinHeap {
   }
 }
 
-let speed = 20;
+const speedInput = document.getElementById("speed");
+
+let speed = parseInt(speedInput.value);
 const speedBtn = document.querySelectorAll(".speed-button");
+
 speedBtn.forEach((btn) => {
   btn.onclick = function () {
     if (this.dataset.isToggled !== "1") {
@@ -101,9 +104,15 @@ speedBtn.forEach((btn) => {
 
       this.dataset.isToggled = "1";
       this.style.boxShadow = "0px 0px 10px 3px rgb(62, 0, 128)";
-      speed = parseInt(this.getAttribute("value"));
+
+      speedInput.value = this.getAttribute("value");
+      speed = parseInt(speedInput.value);
     }
   };
+});
+
+speedInput.addEventListener("input", function () {
+  speed = parseInt(this.value);
 });
 
 document.getElementById("generate").addEventListener("click", function () {
@@ -418,23 +427,40 @@ function getOpacityFromRgba(color) {
   return null;
 }
 
-async function mergeValues(wall, values) {
-  const selectedCell = values[0];
-  const cellToReplace = values[1];
-  wall.style.backgroundColor = selectedCell.style.backgroundColor;
+function createColorMap(maze) {
+  const colorMap = new Map();
+  maze.querySelectorAll(".cell1, .cell2").forEach((cell) => {
+    const color = cell.style.backgroundColor;
+    if (!colorMap.has(color)) {
+      colorMap.set(color, []);
+    }
+    colorMap.get(color).push(cell);
+  });
+  return colorMap;
+}
+
+function mergeValues(wall, values, colorMap) {
+  const [selectedCell, cellToReplace] = values;
+  const selectedColor = selectedCell.style.backgroundColor;
+  const replaceColor = cellToReplace.style.backgroundColor;
+
+  wall.style.backgroundColor = selectedColor;
   removeWall(wall);
 
-  const matchingCells = Array.from(
-    maze.querySelectorAll(
-      '.cell1[style*="background-color"], .cell2[style*="background-color"]'
-    )
-  ).filter(
-    (cell) => cell.style.backgroundColor === cellToReplace.style.backgroundColor
-  );
+  if (colorMap.has(replaceColor)) {
+    const matchingCells = colorMap.get(replaceColor);
 
-  matchingCells.forEach((cell) => {
-    cell.style.backgroundColor = selectedCell.style.backgroundColor;
-  });
+    matchingCells.forEach((cell) => {
+      cell.style.backgroundColor = selectedColor;
+    });
+
+    if (colorMap.has(selectedColor)) {
+      colorMap.get(selectedColor).push(...matchingCells, wall);
+    } else {
+      colorMap.set(selectedColor, [...matchingCells, wall]);
+    }
+    colorMap.delete(replaceColor);
+  }
 }
 
 async function kruskal() {
@@ -447,6 +473,7 @@ async function kruskal() {
       cell.style.backgroundColor = getRandomColor();
     }
   });
+  const colorMap = createColorMap(maze);
 
   for (let wall of breakableWalls) {
     const [row, column] = getCellPosition(wall);
@@ -460,17 +487,16 @@ async function kruskal() {
       const right_cell = rows[row].children[column + 1];
       values = [left_cell, right_cell];
     }
+
     if (values[0].style.backgroundColor !== values[1].style.backgroundColor) {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          mergeValues(wall, values);
-          resolve();
-        }, speed);
-      });
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
+      mergeValues(wall, values, colorMap);
     }
   }
+
   removeColors(maze);
 }
+
 
 async function rdfs() {
   const maze = document.getElementById("maze");
@@ -485,19 +511,19 @@ async function rdfs() {
       const [row, col] = getCellPosition(neighbor);
       const [row2, col2] = getCellPosition(currentCell);
       const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(wall);
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(neighbor);
       stack.push(wall);
       stack.push(neighbor);
     } else {
       const wall = stack.pop();
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       wall.classList.add("visited");
       const visited = stack.pop();
       if (stack.length) {
-        await new Promise((resolve) => setTimeout(resolve, speed));
+        speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
         visited.classList.add("visited");
       }
     }
@@ -520,9 +546,9 @@ async function simplifiedPrim() {
       const [row, col] = getCellPosition(neighbor);
       const wall =
         maze.children[row - direction[0]].children[col - direction[1]];
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(wall);
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(neighbor);
     }
     neighbors = neighbors.filter((n) => n[0] !== neighbor);
@@ -557,9 +583,9 @@ async function truePrim() {
       const [row, col] = getCellPosition(neighbor);
       const wall =
         maze.children[row - direction[0]].children[col - direction[1]];
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(wall);
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       neighbor.style.backgroundColor = "";
       for (let next_neighbor of getNeighborsWithDirection(maze, neighbor)) {
         if (next_neighbor[0].style.backgroundColor !== "") {
@@ -588,7 +614,7 @@ async function huntAndKill() {
         parseInt(huntScan.getAttribute("value")) +
         (i - 1) * cell.offsetHeight +
         "px";
-      await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, 2 * speed));
       for (let j = 1; j < rows[i].children.length - 1; j += 2) {
         const cell = rows[i].children[j];
         if (cell.classList.contains("wall")) {
@@ -600,19 +626,19 @@ async function huntAndKill() {
             const [row2, col2] = getCellPosition(cell);
             const wall =
               maze.children[(row + row2) / 2].children[(col + col2) / 2];
-            await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+            speed > 0 && await new Promise((resolve) => setTimeout(resolve, 2 * speed));
             huntScan.style.display = "none";
             huntScan.style.top = huntScan.getAttribute("value") + "px";
-            await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+            speed > 0 && await new Promise((resolve) => setTimeout(resolve, 2 * speed));
             removeWall(wall);
-            await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+            speed > 0 && await new Promise((resolve) => setTimeout(resolve, 2 * speed));
             removeWall(cell);
-            await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+            speed > 0 && await new Promise((resolve) => setTimeout(resolve, 2 * speed));
             return cell;
           }
         }
       }
-      await new Promise((resolve) => setTimeout(resolve, 2 * speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, 2 * speed));
     }
     huntScan.style.display = "none";
     huntScan.style.top = huntScan.getAttribute("value") + "px";
@@ -626,9 +652,9 @@ async function huntAndKill() {
       const [row, col] = getCellPosition(cell);
       const [row2, col2] = getCellPosition(neighbor);
       const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(wall);
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(neighbor);
       cell = neighbor;
     } else {
@@ -673,12 +699,12 @@ async function iterativeDivision() {
       const wallColumnIndex =
         wallColumns[Math.floor(Math.random() * wallColumns.length)];
       // Add walls to all column index cells
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       for (let i = startIndex[0]; i <= endIndex[0]; i++) {
         const cell = maze.children[i].children[wallColumnIndex];
         addWall(cell);
       }
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       const entries = Array.from(
         { length: endIndex[0] - startIndex[0] + 1 },
         (_, i) => startIndex[0] + i
@@ -714,12 +740,12 @@ async function iterativeDivision() {
       const wallRowIndex =
         wallRows[Math.floor(Math.random() * wallRows.length)];
       // Add walls to all row index cells
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       for (let i = startIndex[1]; i <= endIndex[1]; i++) {
         const cell = maze.children[wallRowIndex].children[i];
         addWall(cell);
       }
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       const entries = Array.from(
         { length: endIndex[1] - startIndex[1] + 1 },
         (_, i) => startIndex[1] + i
@@ -755,14 +781,14 @@ async function binaryTree() {
   for (let i = 3; i < rows.length - 1; i += 2) {
     for (let j = 3; j < rows[i].children.length - 1; j += 2) {
       if (Math.random() > 0.5) {
-        await new Promise((resolve) => setTimeout(resolve, speed));
+        speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
         removeWall(rows[i - 1].children[j]);
-        await new Promise((resolve) => setTimeout(resolve, speed));
+        speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
         removeWall(rows[i].children[j]);
       } else {
-        await new Promise((resolve) => setTimeout(resolve, speed));
+        speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
         removeWall(rows[i].children[j - 1]);
-        await new Promise((resolve) => setTimeout(resolve, speed));
+        speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
         removeWall(rows[i].children[j]);
       }
     }
@@ -802,7 +828,7 @@ async function sidewinder() {
         ];
         removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
       }
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
     }
   }
 }
@@ -823,9 +849,9 @@ async function aldousBroder() {
       const [row, col] = getCellPosition(rdmNeighbor);
       const [row2, col2] = getCellPosition(cell);
       const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(wall);
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(rdmNeighbor);
       visited++;
     }
@@ -879,10 +905,10 @@ async function wilson() {
       const [row, col] = getCellPosition(path[i]);
       const [row2, col2] = getCellPosition(path[i + 1]);
       const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(path[i]);
       path[i].style.backgroundColor = rdmColor;
-      await new Promise((resolve) => setTimeout(resolve, speed));
+      speed > 0 && await new Promise((resolve) => setTimeout(resolve, speed));
       removeWall(wall);
       wall.style.backgroundColor = rdmColor;
     }
