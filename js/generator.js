@@ -161,7 +161,7 @@ document.getElementById("generate").addEventListener("click", function () {
       aldousBroder();
       break;
     case "wilson":
-      clearGrid();
+      fillGrid();
       replaceStartEnd();
       wilson();
       break;
@@ -831,4 +831,61 @@ async function aldousBroder() {
     }
     cell = rdmNeighbor;
   }
+}
+
+async function wilson() {
+  function getRemainningCells(maze) {
+    const rows = maze.children;
+    const remainningCells = [];
+    for (let i = 1; i < rows.length - 1; i += 2) {
+      for (let j = 1; j < rows[i].children.length - 1; j += 2) {
+        if (rows[i].children[j].classList.contains("wall")) {
+          remainningCells.push(rows[i].children[j]);
+        }
+      }
+    }
+    return remainningCells;
+  }
+
+  const maze = document.getElementById("maze");
+
+  let end = getRandomCell(maze);
+  removeWall(end);
+  end.style.backgroundColor = "rgba(229, 60, 60, 0.5)";
+
+  let remainningCells;
+
+  while ((remainningCells = getRemainningCells(maze)).length) {
+    const start =
+      remainningCells[Math.floor(Math.random() * remainningCells.length)];
+    start.style.backgroundColor = "rgba(120, 227, 95, 0.5)";
+    const path = [start];
+    while (path[path.length - 1].classList.contains("wall")) {
+      const currentCell = path[path.length - 1];
+      const neighbors = getAllNeighbors(maze, currentCell);
+      const rdmNeighbor =
+        neighbors[Math.floor(Math.random() * neighbors.length)];
+      if (path.length > 1 && rdmNeighbor === path[path.length - 2]) {
+        path.pop();
+      } else if (path.includes(rdmNeighbor)) {
+        const index = path.indexOf(rdmNeighbor);
+        path.splice(index + 1);
+      } else {
+        path.push(rdmNeighbor);
+      }
+    }
+    const rdmColor = getRandomColor();
+    for (let i = 0; i < path.length - 1; i++) {
+      const [row, col] = getCellPosition(path[i]);
+      const [row2, col2] = getCellPosition(path[i + 1]);
+      const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
+      await new Promise((resolve) => setTimeout(resolve, speed));
+      removeWall(path[i]);
+      path[i].style.backgroundColor = rdmColor;
+      await new Promise((resolve) => setTimeout(resolve, speed));
+      removeWall(wall);
+      wall.style.backgroundColor = rdmColor;
+    }
+  }
+
 }
