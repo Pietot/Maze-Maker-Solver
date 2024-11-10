@@ -96,7 +96,6 @@ const speedBtn = document.querySelectorAll(".speed-button");
 
 speedBtn.forEach((btn) => {
   btn.onclick = function () {
-    if (this.dataset.isToggled !== "1") {
       speedBtn.forEach((btn) => {
         btn.dataset.isToggled = "0";
         btn.style.boxShadow = "";
@@ -107,7 +106,6 @@ speedBtn.forEach((btn) => {
 
       speedInput.value = this.getAttribute("value");
       speed = parseInt(speedInput.value);
-    }
   };
 });
 
