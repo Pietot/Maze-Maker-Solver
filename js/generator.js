@@ -272,6 +272,18 @@ function setRandomColor(maze) {
   });
 }
 
+function getRandomColor(colors = []) {
+  const letters = "0123456789ABCDEF";
+  let color;
+  do {
+    color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+  } while (colors.includes(color));
+  return color;
+}
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -990,6 +1002,7 @@ async function wilson() {
   end.style.backgroundColor = "rgba(229, 60, 60, 0.5)";
 
   let remainningCells;
+  const colors = [];
 
   while ((remainningCells = getRemainningCells(maze)).length) {
     const start =
@@ -1010,7 +1023,8 @@ async function wilson() {
         path.push(rdmNeighbor);
       }
     }
-    const rdmColor = setRandomColor(maze);
+    const rdmColor = getRandomColor(colors);
+    colors.push(rdmColor);
     for (let i = 0; i < path.length - 1; i++) {
       const [row, col] = getCellPosition(path[i]);
       const [row2, col2] = getCellPosition(path[i + 1]);
