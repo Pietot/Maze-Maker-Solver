@@ -96,16 +96,16 @@ const speedBtn = document.querySelectorAll(".speed-button");
 
 speedBtn.forEach((btn) => {
   btn.onclick = function () {
-      speedBtn.forEach((btn) => {
-        btn.dataset.isToggled = "0";
-        btn.style.boxShadow = "";
-      });
+    speedBtn.forEach((btn) => {
+      btn.dataset.isToggled = "0";
+      btn.style.boxShadow = "";
+    });
 
-      this.dataset.isToggled = "1";
-      this.style.boxShadow = "0px 0px 10px 3px rgb(62, 0, 128)";
+    this.dataset.isToggled = "1";
+    this.style.boxShadow = "0px 0px 10px 3px rgb(62, 0, 128)";
 
-      speedInput.value = this.getAttribute("value");
-      speed = parseInt(speedInput.value);
+    speedInput.value = this.getAttribute("value");
+    speed = parseInt(speedInput.value);
   };
 });
 
