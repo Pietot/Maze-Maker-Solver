@@ -255,13 +255,23 @@ function fillGrid() {
   cells.forEach((cell) => cell.classList.add("wall"));
 }
 
-function getRandomColor() {
+function setRandomColor(maze) {
+  const usedColors = new Set();
   const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+
+  maze.querySelectorAll(".cell1, .cell2").forEach((cell) => {
+    if (!cell.classList.contains("wall")) {
+      let color;
+      do {
+        color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+      } while (usedColors.has(color));
+      usedColors.add(color);
+      cell.style.backgroundColor = color;
+    }
+  });
 }
 
 function shuffleArray(array) {
@@ -465,14 +475,10 @@ function mergeValues(wall, values, colorMap) {
 
 async function kruskal() {
   const maze = document.getElementById("maze");
+  setRandomColor(maze);
   const rows = maze.children;
   let breakableWalls = getBreakableWalls(maze);
 
-  maze.querySelectorAll(".cell1, .cell2").forEach((cell) => {
-    if (!cell.classList.contains("wall")) {
-      cell.style.backgroundColor = getRandomColor();
-    }
-  });
   const colorMap = createColorMap(maze);
 
   for (let wall of breakableWalls) {
