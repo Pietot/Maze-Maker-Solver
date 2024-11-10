@@ -143,7 +143,7 @@ document.getElementById("generate").addEventListener("click", function () {
       huntAndKill();
       break;
     case "eller":
-      clearGrid();
+      scultGrid();
       replaceStartEnd();
       eller();
       break;
@@ -669,6 +669,93 @@ async function huntAndKill() {
       cell = neighbor;
     } else {
       cell = await hunt();
+    }
+  }
+}
+
+async function eller() {
+  const maze = document.getElementById("maze");
+  const rows = maze.children;
+  setRandomColor(maze);
+  const colorMap = createColorMap(maze);
+
+  for (let rowIndex = 1; rowIndex < rows.length - 1; rowIndex += 2) {
+    const lastRow = rowIndex === rows.length - 2;
+    const cells = rows[rowIndex].children;
+    for (let valueIndex = 1; valueIndex < cells.length - 2; valueIndex += 2) {
+      const [val1, val2] = [
+        rows[rowIndex].children[valueIndex],
+        rows[rowIndex].children[valueIndex + 2],
+      ];
+      if (
+        lastRow &&
+        val1.style.backgroundColor !== val2.style.backgroundColor
+      ) {
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        mergeValues(
+          maze.children[rowIndex].children[valueIndex + 1],
+          [val1, val2],
+          colorMap
+        );
+      }
+      if (
+        val1.style.backgroundColor !== val2.style.backgroundColor &&
+        Math.random() <= 0.5
+      ) {
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        mergeValues(
+          maze.children[rowIndex].children[valueIndex + 1],
+          [val1, val2],
+          colorMap
+        );
+      }
+    }
+    if (lastRow) break;
+    let carves = 0;
+    // Carve vertically
+    for (let valueIndex = 1; valueIndex <= cells.length - 2; valueIndex += 2) {
+      let val1, val2;
+      if (valueIndex === cells.length - 2) {
+        [val1, val2] = [
+          rows[rowIndex].children[valueIndex],
+          rows[rowIndex].children[valueIndex - 2],
+        ];
+      } else {
+        [val1, val2] = [
+          rows[rowIndex].children[valueIndex],
+          rows[rowIndex].children[valueIndex + 2],
+        ];
+      }
+      if (
+        (val1.style.backgroundColor !== val2.style.backgroundColor &&
+          !carves) ||
+        (val1.style.backgroundColor === val2.style.backgroundColor &&
+          !carves &&
+          valueIndex === cells.length - 2)
+      ) {
+        const wall = rows[rowIndex + 1].children[valueIndex];
+        const [mergeVal1, mergeVal2] = [
+          val1,
+          maze.children[rowIndex + 2].children[valueIndex],
+        ];
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        mergeValues(wall, [mergeVal1, mergeVal2], colorMap);
+        carves++;
+      } else if (Math.random() <= 0.5) {
+        const wall = rows[rowIndex + 1].children[valueIndex];
+        const [mergeVal1, mergeVal2] = [
+          val1,
+          maze.children[rowIndex + 2].children[valueIndex],
+        ];
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        mergeValues(wall, [mergeVal1, mergeVal2], colorMap);
+        carves++;
+      }
+      if (val1.style.backgroundColor !== val2.style.backgroundColor) carves = 0;
     }
   }
 }
