@@ -448,7 +448,16 @@ function createColorMap(maze) {
 }
 
 function mergeValues(wall, values, colorMap) {
-  const [selectedCell, cellToReplace] = values;
+  const [cell1, cell2] = values;
+  const color1 = cell1.style.backgroundColor;
+  const color2 = cell2.style.backgroundColor;
+
+  const count1 = colorMap.has(color1) ? colorMap.get(color1).length : 0;
+  const count2 = colorMap.has(color2) ? colorMap.get(color2).length : 0;
+
+  const selectedCell = count1 >= count2 ? cell1 : cell2;
+  const cellToReplace = selectedCell === cell1 ? cell2 : cell1;
+
   const selectedColor = selectedCell.style.backgroundColor;
   const replaceColor = cellToReplace.style.backgroundColor;
 
