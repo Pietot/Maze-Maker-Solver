@@ -518,7 +518,7 @@ async function kruskal() {
       mergeValues(wall, values, colorMap);
     }
   }
-
+  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
   removeColors(maze);
 }
 
@@ -553,6 +553,7 @@ async function rdfs() {
       }
     }
   }
+  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
   maze
     .querySelectorAll(".visited")
     .forEach((cell) => cell.classList.remove("visited"));
@@ -779,6 +780,8 @@ async function eller() {
       if (val1.style.backgroundColor !== val2.style.backgroundColor) carves = 0;
     }
   }
+  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+  removeColors(maze);
 }
 
 async function iterativeDivision() {
@@ -940,6 +943,7 @@ async function sidewinder() {
           cellCoordinates[0] + northDirection[0],
           cellCoordinates[1] + northDirection[1],
         ];
+        speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
         removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
         cells = [];
       } else {
@@ -948,9 +952,9 @@ async function sidewinder() {
           cellCoordinates[0],
           cellCoordinates[1] + eastDirection[1],
         ];
+        speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
         removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
       }
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
     }
   }
 }
@@ -1037,5 +1041,6 @@ async function wilson() {
       wall.style.backgroundColor = rdmColor;
     }
   }
+  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
   removeColors(maze);
 }
