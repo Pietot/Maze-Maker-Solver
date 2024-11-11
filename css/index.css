@@ -462,6 +462,61 @@ input[type=number] {
     transform: rotate(270deg);
 }
 
+.viewed {
+    position: relative;
+    width: 60%;
+}
+
+.viewed::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../assets/viewed.svg);
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: svg 0.3s ease-in;
+}
+
+.marked {
+    position: relative;
+    width: 60%;
+}
+
+.marked::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../assets/marked.svg);
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: svg 0.3s ease-in;
+}
+
+.path {
+    position: relative;
+    overflow: hidden;
+}
+
+.path::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background-color: rgb(239, 35, 60);
+    transform: translate(-50%, -50%);
+    animation: expand 1s ease-in-out forwards;
+}
+
 .hunt {
     display: none;
     position: absolute;
@@ -469,7 +524,7 @@ input[type=number] {
     box-shadow: 0 0 0 4px yellow;
     border-radius: 10px;
     pointer-events: none;
-    transition: all 0.05s ease-in-out;
+    transition: all 10ms ease-in-out;
 }
 
 .select-sprites {
@@ -479,4 +534,26 @@ input[type=number] {
     pointer-events: none;
     user-select: none;
     box-sizing: border-box;
+}
+
+@keyframes svg {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes expand {
+    0% {
+        width: 0;
+        height: 0;
+    }
+
+    100% {
+        width: 200%;
+        height: 200%;
+    }
 }
