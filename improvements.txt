@@ -1,6 +1,5 @@
 Add a field in the settings idk where where the user can set the number of row/column. This will allow the user to make the maze bigger or smaller.
-Add a button to lock the screen so the maze don't reset on resize.
 Move the start and end freely.
-For mergValues function, take the selected cell with the most color in the maze.
-Add a way to download the maze two different way: one by taking a screenshot of the div, another by converting the maze in a matrix (0 for wall, 1 for path, 2 for solution)
+Add a way to download the maze two different way: one by taking a screenshot of the div, another by converting the maze in a matrix (0 for wall, 1 for path, 2 for solution) (done).
 Stop generating maze when the user click on another button.
+Optimise the rotate in origin shift to rotate the arrow witht the shortest rotate.
