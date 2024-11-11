@@ -150,13 +150,7 @@ function setButtons() {
   // When the button with id "trash" is clicked, remove all walls
   const clear = document.getElementById("trash");
   clear.onclick = () => {
-    const maze = document.getElementById("maze");
-    maze.querySelectorAll(".wall").forEach((cell) => removeWall(cell));
-    Array.from(maze.querySelectorAll(".cell1, .cell2")).forEach((cell) => {
-      cell.style.backgroundColor = "";
-      cell.classList.remove("visited");
-      cell.removeAttribute("opacity");
-    });
+    clearGrid();
   };
 
   // When the button with id "lock" is clicked, change the way to update the grid
@@ -233,9 +227,9 @@ function setInputSpeed() {
   function validateMax() {
     const value = parseInt(numElement.value, 10);
     if (isNaN(value)) {
-      numElement.value = '';
+      numElement.value = "";
     } else if (value < 0) {
-      numElement.value = '';
+      numElement.value = "";
     } else if (value > 10000) {
       numElement.value = 10000;
     }
