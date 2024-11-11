@@ -173,7 +173,7 @@ document.getElementById("generate").addEventListener("click", function () {
       wilson();
       break;
     case "origin_shift":
-      clearGrid();
+      scultGrid();
       replaceStartEnd();
       originShift();
       break;
@@ -211,10 +211,14 @@ function removeWall(cell) {
 
 function clearGrid() {
   const maze = document.getElementById("maze");
-  maze.querySelectorAll(".wall").forEach((cell) => removeWall(cell));
-  Array.from(maze.querySelectorAll("div")).forEach((cell) => {
+  maze.querySelectorAll("div").forEach((cell) => {
     cell.style.backgroundColor = "";
     cell.classList.remove("visited");
+    removeWall(cell);
+    cell.className = cell.className
+      .split(" ")
+      .filter((cls) => !cls.startsWith("arrow"))
+      .join(" ");
   });
 }
 
@@ -351,10 +355,20 @@ function getNeighborsWithDirection(maze, cell) {
   const [row, col] = getCellPosition(cell);
   const rows = maze.children;
   const neighbors = [];
+  const classesToCheck = [
+    "arrow-left",
+    "arrow-right",
+    "arrow-up",
+    "arrow-down",
+  ];
   // Up
   if (
     (row > 1 && rows[row - 2].children[col].classList.contains("wall")) ||
-    (row > 1 && rows[row - 2].children[col].getAttribute("opacity"))
+    (row > 1 && rows[row - 2].children[col].getAttribute("opacity")) ||
+    (row > 1 &&
+      classesToCheck.some((cls) =>
+        rows[row - 2].children[col].classList.contains(cls)
+      ))
   ) {
     neighbors.push([rows[row - 2].children[col], [-1, 0]]);
   }
@@ -363,7 +377,11 @@ function getNeighborsWithDirection(maze, cell) {
     (col < rows[0].children.length - 2 &&
       rows[row].children[col + 2].classList.contains("wall")) ||
     (col < rows[0].children.length - 2 &&
-      rows[row].children[col + 2].getAttribute("opacity"))
+      rows[row].children[col + 2].getAttribute("opacity")) ||
+    (col < rows[0].children.length - 2 &&
+      classesToCheck.some((cls) =>
+        rows[row].children[col + 2].classList.contains(cls)
+      ))
   ) {
     neighbors.push([rows[row].children[col + 2], [0, 1]]);
   }
@@ -372,14 +390,22 @@ function getNeighborsWithDirection(maze, cell) {
     (row < rows.length - 2 &&
       rows[row + 2].children[col].classList.contains("wall")) ||
     (row < rows.length - 2 &&
-      rows[row + 2].children[col].getAttribute("opacity"))
+      rows[row + 2].children[col].getAttribute("opacity")) ||
+    (row < rows.length - 2 &&
+      classesToCheck.some((cls) =>
+        rows[row + 2].children[col].classList.contains(cls)
+      ))
   ) {
     neighbors.push([rows[row + 2].children[col], [1, 0]]);
   }
   // Left
   if (
     (col > 1 && rows[row].children[col - 2].classList.contains("wall")) ||
-    (col > 1 && rows[row].children[col - 2].getAttribute("opacity"))
+    (col > 1 && rows[row].children[col - 2].getAttribute("opacity")) ||
+    (col > 1 &&
+      classesToCheck.some((cls) =>
+        rows[row].children[col - 2].classList.contains(cls)
+      ))
   ) {
     neighbors.push([rows[row].children[col - 2], [0, -1]]);
   }
@@ -943,7 +969,8 @@ async function sidewinder() {
           cellCoordinates[0] + northDirection[0],
           cellCoordinates[1] + northDirection[1],
         ];
-        speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
         removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
         cells = [];
       } else {
@@ -952,7 +979,8 @@ async function sidewinder() {
           cellCoordinates[0],
           cellCoordinates[1] + eastDirection[1],
         ];
-        speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
         removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
       }
     }
@@ -1043,4 +1071,83 @@ async function wilson() {
   }
   speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
   removeColors(maze);
+}
+
+async function originShift() {
+  const maze = document.getElementById("maze");
+  const rows = maze.children;
+  const start = maze.getElementsByClassName("start")[0];
+  const end = maze.getElementsByClassName("end")[0];
+
+  start.classList.remove("start");
+  end.classList.remove("end");
+
+  for (let i = 1; i < rows.length - 1; i += 2) {
+    for (let j = 2; j < rows[i].children.length - 2; j += 2) {
+      removeWall(rows[i].children[j]);
+      rows[i].children[j + 1].classList.add("arrow", "arrow-left");
+    }
+    if (i < rows.length - 2) {
+      removeWall(rows[i + 1].children[1]);
+      rows[i].children[1].classList.add("arrow", "arrow-down");
+    }
+  }
+  let origin = rows[rows.length - 2].children[1];
+  origin.style.backgroundColor = "coral";
+  const nb_iterations = rows.length * rows[0].children.length;
+
+  const classToDirections = {
+    "arrow-right": [0, 1],
+    "arrow-down": [1, 0],
+    "arrow-left": [0, -1],
+    "arrow-up": [-1, 0],
+  };
+  const directionsToClass = {
+    "0, 2": "arrow-right",
+    "2, 0": "arrow-down",
+    "0, -2": "arrow-left",
+    "-2, 0": "arrow-up",
+  };
+
+  for (let i = 0; i < nb_iterations; i++) {
+    const neighbors = getNeighborsWithDirection(maze, origin);
+    const [newOrigin, direction] =
+      neighbors[Math.floor(Math.random() * neighbors.length)];
+
+    speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+    origin.style.backgroundColor = "";
+    const newDirection =
+      directionsToClass[direction[0] * 2 + ", " + direction[1] * 2];
+    origin.classList.add("arrow");
+    origin.classList.replace(origin.classList[2], newDirection);
+
+    origin = newOrigin;
+    const newOriginArrow = origin.classList[2];
+    origin.style.backgroundColor = "coral";
+
+    const [row, col] = getCellPosition(origin);
+    const wall = maze.children[row - direction[0]].children[col - direction[1]];
+    if (wall.classList.contains("wall")) {
+      removeWall(wall);
+      const [row2, col2] = classToDirections[newOriginArrow];
+      const newWall = maze.children[row + row2].children[col + col2];
+      addWall(newWall);
+    }
+  }
+  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+  const arrows = Array.from(maze.getElementsByClassName("arrow"));
+  for (let arrow of arrows) {
+    const classesToRemove = [];
+    for (let className of arrow.classList) {
+      if (className.startsWith("arrow")) {
+        classesToRemove.push(className);
+      }
+    }
+    for (let className of classesToRemove) {
+      arrow.classList.remove(className);
+    }
+  }
+  origin.style.backgroundColor = "";
+  start.classList.add("start");
+  end.classList.add("end");
 }
