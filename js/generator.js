@@ -213,12 +213,13 @@ function clearGrid() {
   const maze = document.getElementById("maze");
   maze.querySelectorAll("div").forEach((cell) => {
     cell.style.backgroundColor = "";
-    cell.classList.remove("visited");
+    cell.classList.remove("visited", "viewed", "marked", "path");
     removeWall(cell);
     cell.className = cell.className
       .split(" ")
       .filter((cls) => !cls.startsWith("arrow"))
       .join(" ");
+      cell.removeAttribute("opacity");
   });
 }
 
