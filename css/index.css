@@ -347,6 +347,7 @@ input[type=number] {
 }
 
 .input-container span {
+    font-family: arial, monospace;
     position: absolute;
     right: 0.5em;
     top: 0;
@@ -409,17 +410,39 @@ input[type=number] {
 }
 
 .start {
+    position: relative;
+}
+
+.start::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 75%;
+    height: 75%;
     background-image: url(../assets/start.svg);
-    background-size: 75%;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    transform: translate(-50%, -50%);
 }
 
 .end {
+    position: relative;
+}
+
+.end::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 75%;
+    height: 75%;
     background-image: url(../assets/end.svg);
-    background-size: 75%;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    transform: translate(-50%, -50%);
 }
 
 .wall {
@@ -512,9 +535,9 @@ input[type=number] {
     left: 50%;
     width: 0;
     height: 0;
-    background-color: rgb(239, 35, 60);
+    background-color: rgba(255, 255, 0, 0.7);
     transform: translate(-50%, -50%);
-    animation: expand 1s ease-in-out forwards;
+    animation: expand 0.3s ease-in-out forwards;
 }
 
 .hunt {
@@ -553,7 +576,7 @@ input[type=number] {
     }
 
     100% {
-        width: 200%;
-        height: 200%;
+        width: 105%;
+        height: 105%;
     }
 }
