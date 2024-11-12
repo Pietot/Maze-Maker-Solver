@@ -63,6 +63,9 @@ function getCellNeighbors(maze, cell, directions = null) {
 
 async function showPath(path) {
   for (let cell of path) {
+    if (cell.classList.contains("start") || cell.classList.contains("end")) {
+      cell.classList.add("path");
+    }
     cell.classList.replace("marked", "path");
     speed > 0 &&
       (await new Promise((resolve) => setTimeout(resolve, speed / 3)));
@@ -94,16 +97,13 @@ async function dfs() {
   const end = document.querySelector(".end");
   const stack = [start];
   const cameFrom = new Map();
-  const directions = getDirectionPriority(
-    getCellPosition(start),
-    getCellPosition(end)
-  );
 
+  let isEndReached = false;
   let current = start;
   let visited = new Set();
   cameFrom.set(start, null);
 
-  while (stack.length > 0) {
+  while (stack.length > 0 && !isEndReached) {
     current = stack.pop();
     if (current === end) {
       break;
@@ -118,16 +118,24 @@ async function dfs() {
     speed > 0 &&
       (await new Promise((resolve) => setTimeout(resolve, speed / 2)));
     if (current !== start) {
-      current.classList.remove("viewed");
-      current.classList.add("marked");
+      current.classList.replace("viewed", "marked");
     }
-    const neighbors = getCellNeighbors(maze, current, directions);
+    const neighbors = getCellNeighbors(
+      maze,
+      current,
+      getDirectionPriority(getCellPosition(current), getCellPosition(end))
+    );
     for (let neighbor of neighbors) {
       if (!visited.has(neighbor)) {
         stack.push(neighbor);
         cameFrom.set(neighbor, current);
-        if (neighbor !== start) {
+        if (neighbor !== start && neighbor !== end) {
           neighbor.classList.add("viewed");
+        }
+        if (neighbor === end) {
+          isEndReached = true;
+          cameFrom.set(end, current);
+          break;
         }
       }
     }
