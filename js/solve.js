@@ -27,6 +27,8 @@ document.getElementById("solve").addEventListener("click", function () {
   }
 });
 
+document.getElementById("maze").onmousedown = cleanGrid;
+
 function cleanGrid() {
   isRunning = false;
   const cells = document.querySelectorAll(".viewed, .marked, .path");
