@@ -1,3 +1,77 @@
+class MinHeapComparator {
+  constructor(comparator = (a, b) => a - b) {
+    this.heap = [];
+    this.comparator = comparator;
+  }
+
+  push(value) {
+    this.heap.push(value);
+    this.heapifyUp();
+  }
+
+  pop() {
+    if (this.heap.length === 0) return null;
+    if (this.heap.length === 1) return this.heap.pop();
+
+    const min = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.heapifyDown();
+    return min;
+  }
+
+  heapifyUp() {
+    let index = this.heap.length - 1;
+    while (
+      this.getParentIndex(index) >= 0 &&
+      this.comparator(this.heap[index], this.heap[this.getParentIndex(index)]) <
+        0
+    ) {
+      this.swap(index, this.getParentIndex(index));
+      index = this.getParentIndex(index);
+    }
+  }
+
+  heapifyDown() {
+    let index = 0;
+    while (this.getLeftChildIndex(index) < this.heap.length) {
+      let smallerChildIndex = this.getLeftChildIndex(index);
+      if (
+        this.getRightChildIndex(index) < this.heap.length &&
+        this.comparator(
+          this.heap[this.getRightChildIndex(index)],
+          this.heap[smallerChildIndex]
+        ) < 0
+      ) {
+        smallerChildIndex = this.getRightChildIndex(index);
+      }
+      if (this.comparator(this.heap[index], this.heap[smallerChildIndex]) <= 0)
+        break;
+
+      this.swap(index, smallerChildIndex);
+      index = smallerChildIndex;
+    }
+  }
+
+  getParentIndex(index) {
+    return Math.floor((index - 1) / 2);
+  }
+
+  getLeftChildIndex(index) {
+    return 2 * index + 1;
+  }
+
+  getRightChildIndex(index) {
+    return 2 * index + 2;
+  }
+
+  swap(index1, index2) {
+    [this.heap[index1], this.heap[index2]] = [
+      this.heap[index2],
+      this.heap[index1],
+    ];
+  }
+}
+
 let isRunning = false;
 
 document.getElementById("solve").addEventListener("click", function () {
@@ -200,6 +274,76 @@ async function bfs() {
         }
         if (neighbor === end) {
           isEndReached = true;
+          cameFrom.set(end, current);
+          break;
+        }
+      }
+    }
+  }
+
+  // Reconstruct the path
+  const path = [];
+  let step = end;
+  while (step) {
+    path.push(step);
+    step = cameFrom.get(step);
+  }
+  path.reverse();
+
+  showPath(path);
+}
+
+async function gbfs() {
+  function heuristic(cell) {
+    const [startRow, startCol] = getCellPosition(cell);
+    const [endRow, endCol] = getCellPosition(end);
+    return Math.abs(startRow - endRow) + Math.abs(startCol - endCol);
+  }
+
+  isRunning = true;
+  const maze = document.querySelector(".maze");
+  const start = document.querySelector(".start");
+  const end = document.querySelector(".end");
+  const endPosition = getCellPosition(end);
+  const cellToExplore = new MinHeapComparator((a, b) => a[1] - b[1]);
+  cellToExplore.push([start, heuristic(start)]);
+  const cameFrom = new Map();
+  cameFrom.set(start, null);
+
+  while (cellToExplore.heap.length > 0 && isRunning) {
+    const [current, _] = cellToExplore.pop();
+    const currentPosition = getCellPosition(current);
+
+    // Check if we reached the end based on position
+    if (
+      currentPosition[0] === endPosition[0] &&
+      currentPosition[1] === endPosition[1]
+    ) {
+      break;
+    }
+
+    if (current.classList.contains("marked")) {
+      continue;
+    }
+
+    speed > 0 &&
+    (await new Promise((resolve) => setTimeout(resolve, speed / 2)));
+    if (isRunning){
+      current.classList.add("marked");
+    }
+
+    const neighbors = getCellNeighbors(maze, current);
+    for (let neighbor of neighbors) {
+      if (!cameFrom.has(neighbor)) {
+        cameFrom.set(neighbor, current);
+        cellToExplore.push([neighbor, heuristic(neighbor)]);
+
+        // Check if neighbor is the end based on position
+        const neighborPosition = getCellPosition(neighbor);
+        if (
+          neighborPosition[0] === endPosition[0] &&
+          neighborPosition[1] === endPosition[1]
+        ) {
           cameFrom.set(end, current);
           break;
         }
