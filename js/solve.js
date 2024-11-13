@@ -152,3 +152,58 @@ async function dfs() {
 
   showPath(path);
 }
+
+async function bfs() {
+  isRunning = true;
+  const maze = document.querySelector(".maze");
+  const start = document.querySelector(".start");
+  const end = document.querySelector(".end");
+  const queue = [start];
+  const cameFrom = new Map();
+
+  let isEndReached = false;
+  let current = start;
+  let visited = new Set();
+  cameFrom.set(start, null);
+
+  while (queue.length > 0 && !isEndReached && isRunning) {
+    current = queue.shift();
+    if (current === end) {
+      break;
+    }
+    if (current.classList.contains("wall")) {
+      continue;
+    }
+    if (visited.has(current)) {
+      continue;
+    }
+    visited.add(current);
+    const neighbors = getCellNeighbors(maze, current);
+    for (let neighbor of neighbors) {
+      if (!visited.has(neighbor)) {
+        queue.push(neighbor);
+        cameFrom.set(neighbor, current);
+        if (neighbor !== start && neighbor !== end && isRunning) {
+          speed && await new Promise((resolve) => setTimeout(resolve, speed / 3));
+          neighbor.classList.add("marked");
+        }
+        if (neighbor === end) {
+          isEndReached = true;
+          cameFrom.set(end, current);
+          break;
+        }
+      }
+    }
+  }
+
+  // Reconstruct the path
+  const path = [];
+  let step = end;
+  while (step) {
+    path.push(step);
+    step = cameFrom.get(step);
+  }
+  path.reverse();
+
+  showPath(path);
+}
