@@ -193,9 +193,6 @@ async function dfs() {
     if (current === end) {
       break;
     }
-    if (current.classList.contains("wall")) {
-      continue;
-    }
     if (visited.has(current)) {
       continue;
     }
@@ -256,9 +253,6 @@ async function bfs() {
     if (current === end) {
       break;
     }
-    if (current.classList.contains("wall")) {
-      continue;
-    }
     if (visited.has(current)) {
       continue;
     }
@@ -269,7 +263,8 @@ async function bfs() {
         queue.push(neighbor);
         cameFrom.set(neighbor, current);
         if (neighbor !== start && neighbor !== end && isRunning) {
-          speed && await new Promise((resolve) => setTimeout(resolve, speed / 3));
+          speed &&
+            (await new Promise((resolve) => setTimeout(resolve, speed / 3)));
           neighbor.classList.add("marked");
         }
         if (neighbor === end) {
