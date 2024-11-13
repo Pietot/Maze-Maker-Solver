@@ -114,6 +114,7 @@ speedInput.addEventListener("input", function () {
 });
 
 document.getElementById("generate").addEventListener("click", function () {
+  isRunning = false;
   const select = document.getElementById("select-algorithm");
   const algorithm = select.options[select.selectedIndex].value;
   switch (algorithm) {
@@ -210,6 +211,7 @@ function removeWall(cell) {
 }
 
 function clearGrid() {
+  isRunning = false;
   const maze = document.getElementById("maze");
   maze.querySelectorAll("div").forEach((cell) => {
     cell.style.backgroundColor = "";

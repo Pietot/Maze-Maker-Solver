@@ -1,4 +1,8 @@
+let isRunning = false;
+
 document.getElementById("solve").addEventListener("click", function () {
+  isRunning = false;
+  cleanGrid();
   const select = document.getElementById("select-solving");
   const algorithm = select.options[select.selectedIndex].value;
   switch (algorithm) {
@@ -24,6 +28,7 @@ document.getElementById("solve").addEventListener("click", function () {
 });
 
 function cleanGrid() {
+  isRunning = false;
   const cells = document.querySelectorAll(".viewed, .marked, .path");
   cells.forEach((cell) => {
     cell.classList.remove("viewed", "marked", "path");
@@ -36,10 +41,10 @@ function getCellNeighbors(maze, cell, directions = null) {
   const neighbors = [];
   const classNames = ["wall", "viewed", "marked"];
   const searchDirections = directions || [
-    [-1, 0],
-    [0, 1],
-    [1, 0],
-    [0, -1],
+    [-1, 0], // Up
+    [0, 1], // Right
+    [1, 0], // Down
+    [0, -1], // Left
   ];
 
   searchDirections.forEach(([directionRow, directionCol]) => {
@@ -63,6 +68,9 @@ function getCellNeighbors(maze, cell, directions = null) {
 
 async function showPath(path) {
   for (let cell of path) {
+    if (!isRunning) {
+      break;
+    }
     if (cell.classList.contains("start") || cell.classList.contains("end")) {
       cell.classList.add("path");
     }
@@ -73,6 +81,7 @@ async function showPath(path) {
 }
 
 async function dfs() {
+  isRunning = true;
   function getDirectionPriority(start, end) {
     const directions = [
       [-1, 0], // Up
@@ -117,7 +126,7 @@ async function dfs() {
     visited.add(current);
     speed > 0 &&
       (await new Promise((resolve) => setTimeout(resolve, speed / 2)));
-    if (current !== start) {
+    if (current !== start && isRunning) {
       current.classList.replace("viewed", "marked");
     }
     const neighbors = getCellNeighbors(
@@ -129,7 +138,7 @@ async function dfs() {
       if (!visited.has(neighbor)) {
         stack.push(neighbor);
         cameFrom.set(neighbor, current);
-        if (neighbor !== start && neighbor !== end) {
+        if (neighbor !== start && neighbor !== end && isRunning) {
           neighbor.classList.add("viewed");
         }
         if (neighbor === end) {
