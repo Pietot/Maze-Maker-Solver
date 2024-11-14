@@ -300,7 +300,7 @@ async function gbfs() {
   const start = document.querySelector(".start");
   const end = document.querySelector(".end");
   const endPosition = getCellPosition(end);
-  
+
   const cellsToExplore = new MinHeapComparator((a, b) => a[1] - b[1]);
   cellsToExplore.push([start, heuristic(start)]);
   const cameFrom = new Map();
@@ -323,8 +323,9 @@ async function gbfs() {
     }
 
     speed > 0 &&
-    (await new Promise((resolve) => setTimeout(resolve, speed / 2)));
-    if (isRunning){
+      (await new Promise((resolve) => setTimeout(resolve, speed / 2)));
+      
+    if (isRunning) {
       current.classList.add("marked");
     }
 
