@@ -289,6 +289,7 @@ async function bfs() {
 }
 
 async function gbfs() {
+  // Heuristic function to calculate the Manhattan distance
   function heuristic(cell) {
     const [startRow, startCol] = getCellPosition(cell);
     const [endRow, endCol] = getCellPosition(end);
@@ -324,7 +325,7 @@ async function gbfs() {
 
     speed > 0 &&
       (await new Promise((resolve) => setTimeout(resolve, speed / 2)));
-      
+
     if (isRunning) {
       current.classList.add("marked");
     }
@@ -334,6 +335,91 @@ async function gbfs() {
       if (!cameFrom.has(neighbor)) {
         cameFrom.set(neighbor, current);
         cellsToExplore.push([neighbor, heuristic(neighbor)]);
+
+        // Check if neighbor is the end based on position
+        const neighborPosition = getCellPosition(neighbor);
+        if (
+          neighborPosition[0] === endPosition[0] &&
+          neighborPosition[1] === endPosition[1]
+        ) {
+          cameFrom.set(end, current);
+          break;
+        }
+      }
+    }
+  }
+
+  // Reconstruct the path
+  const path = [];
+  let step = end;
+  while (step) {
+    path.push(step);
+    step = cameFrom.get(step);
+  }
+  path.reverse();
+
+  showPath(path);
+}
+
+async function aStar() {
+  // Heuristic function to calculate the Manhattan distance
+  function heuristic(cell) {
+    const [startRow, startCol] = getCellPosition(cell);
+    const [endRow, endCol] = getCellPosition(end);
+    return Math.abs(startRow - endRow) + Math.abs(startCol - endCol);
+  }
+
+  isRunning = true;
+  const maze = document.querySelector(".maze");
+  const start = document.querySelector(".start");
+  const end = document.querySelector(".end");
+  const endPosition = getCellPosition(end);
+  const cost = 1
+
+  const cellsToExplore = new MinHeapComparator((a, b) => a[1] - b[1]);
+  cellsToExplore.push([start, heuristic(start)]);
+
+  // Map to stock path and cost g(n) for each cell
+  const cameFrom = new Map();
+  // Stock the cost to reach the cell
+  const gScore = new Map();
+
+  cameFrom.set(start, null);
+  gScore.set(start, 0);
+
+  while (cellsToExplore.heap.length > 0 && isRunning) {
+    const [current, _] = cellsToExplore.pop();
+    const currentPosition = getCellPosition(current);
+
+    // Check if we reached the end based on position
+    if (
+      currentPosition[0] === endPosition[0] &&
+      currentPosition[1] === endPosition[1]
+    ) {
+      break;
+    }
+
+    if (current.classList.contains("marked")) {
+      continue;
+    }
+
+    speed > 0 &&
+      (await new Promise((resolve) => setTimeout(resolve, speed / 2)));
+    if (isRunning) {
+      current.classList.add("marked");
+    }
+
+    const neighbors = getCellNeighbors(maze, current);
+    for (let neighbor of neighbors) {
+      const tentativeGScore = gScore.get(current) + cost;
+
+      // If we found a better path to reach the neighbor
+      if (!gScore.has(neighbor) || tentativeGScore < gScore.get(neighbor)) {
+        cameFrom.set(neighbor, current);
+        gScore.set(neighbor, tentativeGScore);
+
+        const fScore = tentativeGScore + heuristic(neighbor);
+        cellsToExplore.push([neighbor, fScore]);
 
         // Check if neighbor is the end based on position
         const neighborPosition = getCellPosition(neighbor);
