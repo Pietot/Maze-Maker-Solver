@@ -384,7 +384,6 @@ async function aStar() {
 
   while (cellsToExplore.heap.length > 0 && isRunning) {
     const [current, _] = cellsToExplore.pop();
-    const currentPosition = getCellPosition(current);
 
     if (current === end) break;
 
@@ -399,7 +398,7 @@ async function aStar() {
       !current.classList.contains("end") &&
       isRunning
     ) {
-      current.classList.add("marked");
+      current.classList.replace("viewed", "marked");
     }
 
     const neighbors = getCellNeighbors(maze, current);
@@ -413,6 +412,10 @@ async function aStar() {
 
         const fScore = tentativeGScore + heuristic(neighbor);
         cellsToExplore.push([neighbor, fScore]);
+
+        if (neighbor !== start && neighbor !== end && isRunning) {
+          neighbor.classList.add("viewed");
+        }
 
         if (neighbor === end) {
           cameFrom.set(end, current);
