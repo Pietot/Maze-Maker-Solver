@@ -300,13 +300,14 @@ async function gbfs() {
   const start = document.querySelector(".start");
   const end = document.querySelector(".end");
   const endPosition = getCellPosition(end);
-  const cellToExplore = new MinHeapComparator((a, b) => a[1] - b[1]);
-  cellToExplore.push([start, heuristic(start)]);
+  
+  const cellsToExplore = new MinHeapComparator((a, b) => a[1] - b[1]);
+  cellsToExplore.push([start, heuristic(start)]);
   const cameFrom = new Map();
   cameFrom.set(start, null);
 
-  while (cellToExplore.heap.length > 0 && isRunning) {
-    const [current, _] = cellToExplore.pop();
+  while (cellsToExplore.heap.length > 0 && isRunning) {
+    const [current, _] = cellsToExplore.pop();
     const currentPosition = getCellPosition(current);
 
     // Check if we reached the end based on position
@@ -331,7 +332,7 @@ async function gbfs() {
     for (let neighbor of neighbors) {
       if (!cameFrom.has(neighbor)) {
         cameFrom.set(neighbor, current);
-        cellToExplore.push([neighbor, heuristic(neighbor)]);
+        cellsToExplore.push([neighbor, heuristic(neighbor)]);
 
         // Check if neighbor is the end based on position
         const neighborPosition = getCellPosition(neighbor);
