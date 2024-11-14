@@ -300,8 +300,6 @@ async function gbfs() {
   const maze = document.getElementById("maze");
   const start = document.querySelector(".start");
   const end = document.querySelector(".end");
-  const endPosition = getCellPosition(end);
-  const direction = getDirectionPriority(start, end, (reverse = false));
 
   const cellsToExplore = new MinHeapComparator((a, b) => a[1] - b[1]);
   cellsToExplore.push([start, heuristic(start)]);
@@ -310,13 +308,7 @@ async function gbfs() {
 
   while (cellsToExplore.heap.length > 0 && isRunning) {
     const [current, _] = cellsToExplore.pop();
-    const currentPosition = getCellPosition(current);
-
-    // Check if we reached the end based on position
-    if (
-      currentPosition[0] === endPosition[0] &&
-      currentPosition[1] === endPosition[1]
-    ) {
+    if (current === end) {
       break;
     }
 
@@ -373,7 +365,6 @@ async function aStar() {
   const maze = document.getElementById("maze");
   const start = document.querySelector(".start");
   const end = document.querySelector(".end");
-  const endPosition = getCellPosition(end);
   const cost = 1;
 
   const cellsToExplore = new MinHeapComparator((a, b) => a[1] - b[1]);
@@ -391,7 +382,6 @@ async function aStar() {
     const [current, _] = cellsToExplore.pop();
     const currentPosition = getCellPosition(current);
 
-    // Check if we reached the end based on position
     if (current === end) break;
 
     if (current.classList.contains("marked")) {
@@ -420,8 +410,6 @@ async function aStar() {
         const fScore = tentativeGScore + heuristic(neighbor);
         cellsToExplore.push([neighbor, fScore]);
 
-        // Check if neighbor is the end based on position
-        const neighborPosition = getCellPosition(neighbor);
         if (neighbor === end) {
           cameFrom.set(end, current);
           break;
