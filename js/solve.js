@@ -237,7 +237,7 @@ async function dfs() {
 
 async function bfs() {
   isRunning = true;
-  const maze = document.querySelector(".maze");
+  const maze = document.getElementById("maze");
   const start = document.querySelector(".start");
   const end = document.querySelector(".end");
   const queue = [start];
@@ -262,9 +262,9 @@ async function bfs() {
       if (!visited.has(neighbor)) {
         queue.push(neighbor);
         cameFrom.set(neighbor, current);
+        speed &&
+          (await new Promise((resolve) => setTimeout(resolve, speed / 3)));
         if (neighbor !== start && neighbor !== end && isRunning) {
-          speed &&
-            (await new Promise((resolve) => setTimeout(resolve, speed / 3)));
           neighbor.classList.add("marked");
         }
         if (neighbor === end) {
@@ -297,10 +297,11 @@ async function gbfs() {
   }
 
   isRunning = true;
-  const maze = document.querySelector(".maze");
+  const maze = document.getElementById("maze");
   const start = document.querySelector(".start");
   const end = document.querySelector(".end");
   const endPosition = getCellPosition(end);
+  const direction = getDirectionPriority(start, end, (reverse = false));
 
   const cellsToExplore = new MinHeapComparator((a, b) => a[1] - b[1]);
   cellsToExplore.push([start, heuristic(start)]);
@@ -340,12 +341,7 @@ async function gbfs() {
         cameFrom.set(neighbor, current);
         cellsToExplore.push([neighbor, heuristic(neighbor)]);
 
-        // Check if neighbor is the end based on position
-        const neighborPosition = getCellPosition(neighbor);
-        if (
-          neighborPosition[0] === endPosition[0] &&
-          neighborPosition[1] === endPosition[1]
-        ) {
+        if (neighbor === end) {
           cameFrom.set(end, current);
           break;
         }
@@ -374,7 +370,7 @@ async function aStar() {
   }
 
   isRunning = true;
-  const maze = document.querySelector(".maze");
+  const maze = document.getElementById("maze");
   const start = document.querySelector(".start");
   const end = document.querySelector(".end");
   const endPosition = getCellPosition(end);
@@ -396,12 +392,7 @@ async function aStar() {
     const currentPosition = getCellPosition(current);
 
     // Check if we reached the end based on position
-    if (
-      currentPosition[0] === endPosition[0] &&
-      currentPosition[1] === endPosition[1]
-    ) {
-      break;
-    }
+    if (current === end) break;
 
     if (current.classList.contains("marked")) {
       continue;
@@ -431,10 +422,7 @@ async function aStar() {
 
         // Check if neighbor is the end based on position
         const neighborPosition = getCellPosition(neighbor);
-        if (
-          neighborPosition[0] === endPosition[0] &&
-          neighborPosition[1] === endPosition[1]
-        ) {
+        if (neighbor === end) {
           cameFrom.set(end, current);
           break;
         }
