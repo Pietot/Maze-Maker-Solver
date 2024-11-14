@@ -666,8 +666,8 @@ async function huntAndKill() {
     huntScan.style.display = "block";
     for (let i = 1; i < rows.length - 1; i += 2) {
       huntScan.style.top =
-        parseInt(huntScan.getAttribute("value")) +
-        (i - 1) * cell.offsetHeight +
+        Math.floor(parseInt(huntScan.getAttribute("value")) +
+        (i - 1) * cell.offsetHeight) +
         "px";
       speed > 0 &&
         (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
@@ -687,13 +687,11 @@ async function huntAndKill() {
             huntScan.style.display = "none";
             huntScan.style.top = huntScan.getAttribute("value") + "px";
             speed > 0 &&
-              (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
+              (await new Promise((resolve) => setTimeout(resolve, speed)));
             removeWall(wall);
             speed > 0 &&
-              (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
+              (await new Promise((resolve) => setTimeout(resolve, speed)));
             removeWall(cell);
-            speed > 0 &&
-              (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
             return cell;
           }
         }

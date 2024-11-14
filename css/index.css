@@ -547,7 +547,7 @@ input[type=number] {
     box-shadow: 0 0 0 4px yellow;
     border-radius: 10px;
     pointer-events: none;
-    transition: all 10ms ease-in-out;
+    transition: all 100ms ease-in-out;
 }
 
 .select-sprites {
