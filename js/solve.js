@@ -324,7 +324,7 @@ async function gbfs() {
       !current.classList.contains("end") &&
       isRunning
     ) {
-      current.classList.add("marked");
+      current.classList.replace("viewed", "marked");
     }
 
     const neighbors = getCellNeighbors(maze, current);
@@ -332,6 +332,10 @@ async function gbfs() {
       if (!cameFrom.has(neighbor)) {
         cameFrom.set(neighbor, current);
         cellsToExplore.push([neighbor, heuristic(neighbor)]);
+
+        if (neighbor !== start && neighbor !== end && isRunning) {
+          neighbor.classList.add("viewed");
+        }
 
         if (neighbor === end) {
           cameFrom.set(end, current);
