@@ -3,3 +3,4 @@ Move the start and end freely.
 Add a way to download the maze two different way: one by taking a screenshot of the div, another by converting the maze in a matrix (0 for wall, 1 for path, 2 for solution) (done).
 Stop generating maze when the user click on another button.
 Optimise the rotate in origin shift to rotate the arrow witht the shortest rotate.
+Fix gbfs function (goto assets/gbfs_fix.png to se what's wrong).
