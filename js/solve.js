@@ -326,7 +326,11 @@ async function gbfs() {
     speed > 0 &&
       (await new Promise((resolve) => setTimeout(resolve, speed / 2)));
 
-    if (isRunning) {
+    if (
+      !current.classList.contains("start") &&
+      !current.classList.contains("end") &&
+      isRunning
+    ) {
       current.classList.add("marked");
     }
 
@@ -374,7 +378,7 @@ async function aStar() {
   const start = document.querySelector(".start");
   const end = document.querySelector(".end");
   const endPosition = getCellPosition(end);
-  const cost = 1
+  const cost = 1;
 
   const cellsToExplore = new MinHeapComparator((a, b) => a[1] - b[1]);
   cellsToExplore.push([start, heuristic(start)]);
@@ -405,7 +409,11 @@ async function aStar() {
 
     speed > 0 &&
       (await new Promise((resolve) => setTimeout(resolve, speed / 2)));
-    if (isRunning) {
+    if (
+      !current.classList.contains("start") &&
+      !current.classList.contains("end") &&
+      isRunning
+    ) {
       current.classList.add("marked");
     }
 
