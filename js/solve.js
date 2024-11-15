@@ -336,11 +336,6 @@ async function gbfs() {
         if (neighbor !== start && neighbor !== end && isRunning) {
           neighbor.classList.add("viewed");
         }
-
-        if (neighbor === end) {
-          cameFrom.set(end, current);
-          break;
-        }
       }
     }
   }
@@ -415,11 +410,6 @@ async function aStar() {
 
         if (neighbor !== start && neighbor !== end && isRunning) {
           neighbor.classList.add("viewed");
-        }
-
-        if (neighbor === end) {
-          cameFrom.set(end, current);
-          break;
         }
       }
     }
