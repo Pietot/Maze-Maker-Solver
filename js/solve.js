@@ -232,7 +232,9 @@ async function dfs() {
   }
   path.reverse();
 
-  showPath(path);
+  if (path[0] === start && isRunning) {
+    showPath(path);
+  }
 }
 
 async function bfs() {
@@ -285,7 +287,9 @@ async function bfs() {
   }
   path.reverse();
 
-  showPath(path);
+  if (path[0] === start && isRunning) {
+    showPath(path);
+  }
 }
 
 async function gbfs() {
@@ -349,7 +353,9 @@ async function gbfs() {
   }
   path.reverse();
 
-  showPath(path);
+  if (path[0] === start && isRunning) {
+    showPath(path);
+  }
 }
 
 async function aStar() {
@@ -424,5 +430,7 @@ async function aStar() {
   }
   path.reverse();
 
-  showPath(path);
+  if (path[0] === start && isRunning) {
+    showPath(path);
+  }
 }
