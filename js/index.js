@@ -319,12 +319,3 @@ document.addEventListener("touchend", function () {
   isMouseDown = false;
   lastTouchedCell = null;
 });
-
-function printDiv2(div) {
-  html2canvas(div, {
-    onrendered: function (canvas) {
-      var img = canvas.toDataURL();
-      window.open(img);
-    },
-  });
-}
