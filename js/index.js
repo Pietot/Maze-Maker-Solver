@@ -1,4 +1,4 @@
-// Offset between the maze and the container (15px on left/right and top/bottom)
+// Offset min between the maze and the container (15px on left/right and top/bottom)
 const offset = 30;
 // Size of each square in the maze by default
 const defaultSquareSize = 45;
@@ -239,23 +239,13 @@ function setInputSpeed() {
 
 function setHuntScan() {
   const huntScan = document.getElementById("hunt");
-  const maze = document.getElementById("maze");
-  const container = document.getElementById("maze-container");
   const cell = document.getElementsByClassName("cell1")[0];
 
   huntScan.style.width = maze.offsetWidth + cell.offsetWidth / 2 + "px";
   huntScan.style.height = 1.5 * cell.offsetHeight + "px";
-  huntScan.style.top =
-    Math.floor(
-      container.offsetHeight - maze.offsetHeight - cell.offsetHeight / 2
-    ) + "px";
+  huntScan.style.top = Math.floor(offset - cell.offsetHeight / 2) + "px";
   huntScan.style.left = maze.offsetLeft - cell.offsetWidth / 4 + "px";
-  huntScan.setAttribute(
-    "value",
-    Math.floor(
-      container.offsetHeight - maze.offsetHeight - cell.offsetHeight / 2
-    )
-  );
+  huntScan.setAttribute("value", Math.floor(offset - cell.offsetHeight / 2));
 }
 
 // Download the maze as a text file
