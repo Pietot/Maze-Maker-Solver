@@ -245,9 +245,17 @@ function setHuntScan() {
 
   huntScan.style.width = maze.offsetWidth + cell.offsetWidth / 2 + "px";
   huntScan.style.height = 1.5 * cell.offsetHeight + "px";
-  huntScan.style.top = Math.floor(container.offsetHeight - maze.offsetHeight - cell.offsetHeight / 2) + "px";
+  huntScan.style.top =
+    Math.floor(
+      container.offsetHeight - maze.offsetHeight - cell.offsetHeight / 2
+    ) + "px";
   huntScan.style.left = maze.offsetLeft - cell.offsetWidth / 4 + "px";
-  huntScan.setAttribute("value", Math.floor(container.offsetHeight - maze.offsetHeight - cell.offsetHeight / 2));
+  huntScan.setAttribute(
+    "value",
+    Math.floor(
+      container.offsetHeight - maze.offsetHeight - cell.offsetHeight / 2
+    )
+  );
 }
 
 // Download the maze as a text file
@@ -321,3 +329,12 @@ document.addEventListener("touchend", function () {
   isMouseDown = false;
   lastTouchedCell = null;
 });
+
+function printDiv2(div) {
+  html2canvas(div, {
+    onrendered: function (canvas) {
+      var img = canvas.toDataURL();
+      window.open(img);
+    },
+  });
+}
