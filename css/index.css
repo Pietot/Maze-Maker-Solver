@@ -145,6 +145,8 @@ input[type=number] {
     transition: all 150ms ease;
     box-sizing: border-box;
     color: #404d68;
+    /* TEMPORARY FIX TO THE LABEL WIDTH */
+    transform: translateX(6px);
 }
 
 .select-algorithm:focus {
@@ -156,7 +158,7 @@ input[type=number] {
 .select-arrow {
     position: relative;
     top: -2px;
-    right: 30px;
+    right: 24px;
     width: 10px;
     height: 6px;
     stroke-width: 2px;
