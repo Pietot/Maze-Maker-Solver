@@ -5,3 +5,4 @@ Stop generating maze when the user click on another button.
 Optimise the rotate in origin shift to rotate the arrow witht the shortest rotate.
 Fix gbfs function (goto assets/gbfs_fix.png to see what's wrong).
 Fix A* (goto assets/a_star_fix.png to see what's wrong).
+Do the responsive for mobile.
