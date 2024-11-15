@@ -6,3 +6,4 @@ Optimise the rotate in origin shift to rotate the arrow witht the shortest rotat
 Fix gbfs function (goto assets/png/gbfs_fix.png to se what's wrong).
 Fix A* (goto assets/png/a_star_fix.png to se what's wrong).
 Do the responsive for mobile.
+Fix label select width (goto assets/png/label-fix.png to see what's wrong).
