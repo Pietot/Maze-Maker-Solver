@@ -1,7 +1,7 @@
 // Offset min between the maze and the container (15px on left/right and top/bottom)
 const offset = 30;
 // Size of each square in the maze by default
-const defaultSquareSize = 45;
+const defaultSquareSize = 30;
 
 let isMouseDown = false;
 let drawingMode = "paintbrush";
