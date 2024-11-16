@@ -638,7 +638,6 @@ async function truePrim() {
         maze.children[row - direction[0]].children[col - direction[1]];
       speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
       removeWall(wall);
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
       neighbor.style.backgroundColor = "";
       for (let next_neighbor of getNeighborsWithDirection(maze, neighbor)) {
         if (next_neighbor[0].style.backgroundColor !== "") {
