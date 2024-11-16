@@ -239,13 +239,24 @@ function setInputSpeed() {
 
 function setHuntScan() {
   const huntScan = document.getElementById("hunt");
+  const mazeContainer = document.getElementById("maze-container");
   const cell = document.getElementsByClassName("cell1")[0];
 
   huntScan.style.width = maze.offsetWidth + cell.offsetWidth / 2 + "px";
   huntScan.style.height = 1.5 * cell.offsetHeight + "px";
-  huntScan.style.top = Math.floor(offset - cell.offsetHeight / 2) + "px";
+  huntScan.style.top =
+    Math.floor(
+      (mazeContainer.offsetHeight - maze.offsetHeight) / 2 +
+        1.5 * cell.offsetHeight / 2
+    ) + "px";
   huntScan.style.left = maze.offsetLeft - cell.offsetWidth / 4 + "px";
-  huntScan.setAttribute("value", Math.floor(offset - cell.offsetHeight / 2));
+  huntScan.setAttribute(
+    "value",
+    Math.floor(
+      (mazeContainer.offsetHeight - maze.offsetHeight) / 2 +
+        1.5 * cell.offsetHeight / 2
+    )
+  );
 }
 
 // Download the maze as a text file
