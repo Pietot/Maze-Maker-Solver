@@ -1037,7 +1037,6 @@ async function wilson() {
   while ((remainningCells = getRemainningCells(maze)).length) {
     const start =
       remainningCells[Math.floor(Math.random() * remainningCells.length)];
-    start.style.backgroundColor = "rgba(120, 227, 95, 0.5)";
     const path = [start];
     while (path[path.length - 1].classList.contains("wall")) {
       const currentCell = path[path.length - 1];
