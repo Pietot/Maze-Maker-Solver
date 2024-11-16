@@ -221,7 +221,7 @@ function clearGrid() {
       .split(" ")
       .filter((cls) => !cls.startsWith("arrow"))
       .join(" ");
-      cell.removeAttribute("opacity");
+    cell.removeAttribute("opacity");
   });
 }
 
@@ -666,9 +666,9 @@ async function huntAndKill() {
     huntScan.style.display = "block";
     for (let i = 1; i < rows.length - 1; i += 2) {
       huntScan.style.top =
-        Math.floor(parseInt(huntScan.getAttribute("value")) +
-        (i - 1) * cell.offsetHeight) +
-        "px";
+        Math.floor(
+          parseInt(huntScan.getAttribute("value")) + (i - 1) * cell.offsetHeight
+        ) + "px";
       speed > 0 &&
         (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
       for (let j = 1; j < rows[i].children.length - 1; j += 2) {
