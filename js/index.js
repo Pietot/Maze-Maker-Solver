@@ -269,12 +269,18 @@ document.getElementById("download").onclick = function () {
     mazeString += "[";
     const cols = rows[i].children;
     for (let j = 0; j < cols.length; j++) {
-      if (cols[j].classList.contains("solution")) {
-        mazeString += "2,";
+      if (cols[j].classList.contains("path")) {
+        mazeString += "3,";
       } else if (cols[j].classList.contains("wall")) {
-        mazeString += "1,";
+        if (i === 0 || j === 0 || i === rows.length - 1 || j === cols.length - 1) {
+          mazeString += "0,";
+        } else if (i % 2 === 0 && j % 2 === 0) {
+          mazeString += "0,";
+        } else {
+          mazeString += "1,";
+        }
       } else {
-        mazeString += "0,";
+        mazeString += "2,";
       }
     }
     // Delete the last comma
