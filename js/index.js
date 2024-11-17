@@ -279,10 +279,10 @@ document.getElementById("download").onclick = function () {
     }
     // Delete the last comma
     mazeString = mazeString.slice(0, -1);
-    mazeString += "]\n";
+    mazeString += "],\n";
   }
-  // Delete the last break line
-  mazeString = mazeString.slice(0, -1);
+  // Delete the last break line + comma
+  mazeString = mazeString.slice(0, -2);
   mazeString += "]";
 
   const blob = new Blob([mazeString], { type: "text/plain" });
