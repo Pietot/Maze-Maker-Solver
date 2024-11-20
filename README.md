@@ -17,7 +17,7 @@ The web page is available : **[here](pietot.github.io/Maze-Maker-Solver/)**
 ### 2. [Maze generation algorithms](#2---maze-generation-algorithms)
 ### 3. [Pathfinding algorithms](#3---pathfinding-algorithms)
 ### 4. [Improve the project](#4---improve-the-project)
-### 5. [Credits](#5---🙏-credits)
+### 5. [Credits](#5---credits)
 
 ## 1 - Features
 
