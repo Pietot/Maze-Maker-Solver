@@ -163,6 +163,18 @@ The web page is available : **[here](pietot.github.io/Maze-Maker-Solver/)**
 
 <br/>
 
+## 4 - Improve the project
+
+If you like this project and/or want to help or improve it, you can:
+
+- Create an issue if you find a bug or want to suggest a feature or any improvement (no matter how small it is).
+
+- Create a pull request if you want to add a feature, fix a bug or improve the code.
+
+- Contact me if you want to talk about the project or anything else (Discord: pietot).
+
+> **Note**: If you want to be guided/helped, you already have a file named <a href="improvements.txt">improvements.TXT</a> in the project directory, where you can see all the improvements that can be made.
+
 # 5 - 🙏 Credits
 
 - **[Maze Solver](https://angeluriot.com/maze_solver/)**: The project was inspired by this website.
