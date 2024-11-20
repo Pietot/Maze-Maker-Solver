@@ -175,7 +175,7 @@ If you like this project and/or want to help or improve it, you can:
 
 > **Note**: If you want to be guided/helped, you already have a file named <a href="improvements.txt">improvements.TXT</a> in the project directory, where you can see all the improvements that can be made.
 
-# 5 - 🙏 Credits
+# 5 - Credits
 
 - **[Maze Solver](https://angeluriot.com/maze_solver/)**: The project was inspired by this website.
 - **[Angel Uriot](https://angeluriot.com/maze_solver/)**: The original repository of the project.
