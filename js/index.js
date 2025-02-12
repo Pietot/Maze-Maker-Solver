@@ -355,9 +355,7 @@ function printToFile(div) {
   const end = document.getElementsByClassName("end")[0];
   start.classList.remove("start");
   end.classList.remove("end");
-  html2canvas(div, {
-    scale: 3,
-  }).then(function (canvas) {
+  html2canvas(div).then(function (canvas) {
     var myImage = canvas.toDataURL("image/png");
     downloadURI(myImage, "maze.png");
     start.classList.add("start");
