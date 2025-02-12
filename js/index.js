@@ -344,24 +344,21 @@ function downloadURI(uri, name) {
   var link = document.createElement("a");
   link.download = name;
   link.href = uri;
-  document.body.appendChild(link); // Append the link to the body
+  document.body.appendChild(link);
   link.click();
-  document.body.removeChild(link); // Remove the link after clicking
+  document.body.removeChild(link);
 }
 
-// Your modified code.
+// Function to print the maze to a png file
 function printToFile(div) {
   const start = document.getElementsByClassName("start")[0];
   const end = document.getElementsByClassName("end")[0];
   start.classList.remove("start");
   end.classList.remove("end");
   html2canvas(div, {
-    scale: 3, // Increase scale for higher quality
+    scale: 3,
   }).then(function (canvas) {
     var myImage = canvas.toDataURL("image/png");
-    //create your own dialog with warning before saving file
-    //beforeDownloadReadMessage();
-    //Then download file
     downloadURI(myImage, "maze.png");
     start.classList.add("start");
     end.classList.add("end");
