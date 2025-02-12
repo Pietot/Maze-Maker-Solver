@@ -204,7 +204,7 @@ function setButtons() {
   // Manage the style of the speed buttons
   const speedBtn = document.querySelectorAll(".speed-button");
   speedBtn.forEach((btn) => {
-    btn.onclick = function () {
+    btn.addEventListener("click", function () {
       if (this.dataset.isToggled !== "1") {
         speedBtn.forEach((btn) => {
           btn.dataset.isToggled = "0";
@@ -214,7 +214,7 @@ function setButtons() {
         this.dataset.isToggled = "1";
         this.style.boxShadow = "0px 0px 10px 3px rgb(62, 0, 128)";
       }
-    };
+    });
   });
 }
 

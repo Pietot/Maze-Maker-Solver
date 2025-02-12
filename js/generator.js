@@ -95,7 +95,7 @@ let speed = parseInt(speedInput.value);
 const speedBtn = document.querySelectorAll(".speed-button");
 
 speedBtn.forEach((btn) => {
-  btn.onclick = function () {
+  btn.addEventListener("click", function () {
     speedBtn.forEach((btn) => {
       btn.dataset.isToggled = "0";
       btn.style.boxShadow = "";
@@ -106,7 +106,7 @@ speedBtn.forEach((btn) => {
 
     speedInput.value = this.getAttribute("value");
     speed = parseInt(speedInput.value);
-  };
+  });
 });
 
 speedInput.addEventListener("input", function () {
