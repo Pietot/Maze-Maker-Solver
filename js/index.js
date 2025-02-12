@@ -247,19 +247,19 @@ function setHuntScan() {
   huntScan.style.top =
     Math.floor(
       (mazeContainer.offsetHeight - maze.offsetHeight) / 2 +
-        1.5 * cell.offsetHeight / 2
+        (1.5 * cell.offsetHeight) / 2
     ) + "px";
   huntScan.style.left = maze.offsetLeft - cell.offsetWidth / 4 + "px";
   huntScan.setAttribute(
     "value",
     Math.floor(
       (mazeContainer.offsetHeight - maze.offsetHeight) / 2 +
-        1.5 * cell.offsetHeight / 2
+        (1.5 * cell.offsetHeight) / 2
     )
   );
 }
 
-// Download the maze as a text file
+// Download the maze as a text file and png file
 document.getElementById("download").onclick = function () {
   const maze = document.getElementById("maze");
   const rows = maze.children;
@@ -272,7 +272,12 @@ document.getElementById("download").onclick = function () {
       if (cols[j].classList.contains("path")) {
         mazeString += "3,";
       } else if (cols[j].classList.contains("wall")) {
-        if (i === 0 || j === 0 || i === rows.length - 1 || j === cols.length - 1) {
+        if (
+          i === 0 ||
+          j === 0 ||
+          i === rows.length - 1 ||
+          j === cols.length - 1
+        ) {
           mazeString += "0,";
         } else if (i % 2 === 0 && j % 2 === 0) {
           mazeString += "0,";
@@ -291,15 +296,12 @@ document.getElementById("download").onclick = function () {
   mazeString = mazeString.slice(0, -2);
   mazeString += "]";
 
-  const blob = new Blob([mazeString], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
+  downloadURI(
+    "data:text/plain;charset=utf-8," + encodeURIComponent(mazeString),
+    "maze.txt"
+  );
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "maze.txt";
-  a.click();
-
-  URL.revokeObjectURL(url);
+  printToFile(document.getElementById("maze-container"));
 };
 
 // Function to set the start and end of the maze like align-content: center and justify-content: space-around
@@ -336,3 +338,32 @@ document.addEventListener("touchend", function () {
   isMouseDown = false;
   lastTouchedCell = null;
 });
+
+// Creating dynamic link that automatically click
+function downloadURI(uri, name) {
+  var link = document.createElement("a");
+  link.download = name;
+  link.href = uri;
+  document.body.appendChild(link); // Append the link to the body
+  link.click();
+  document.body.removeChild(link); // Remove the link after clicking
+}
+
+// Your modified code.
+function printToFile(div) {
+  const start = document.getElementsByClassName("start")[0];
+  const end = document.getElementsByClassName("end")[0];
+  start.classList.remove("start");
+  end.classList.remove("end");
+  html2canvas(div, {
+    scale: 3, // Increase scale for higher quality
+  }).then(function (canvas) {
+    var myImage = canvas.toDataURL("image/png");
+    //create your own dialog with warning before saving file
+    //beforeDownloadReadMessage();
+    //Then download file
+    downloadURI(myImage, "maze.png");
+    start.classList.add("start");
+    end.classList.add("end");
+  });
+}
