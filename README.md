@@ -41,7 +41,7 @@ The web page is available : **[here](pietot.github.io/Maze-Maker-Solver/)**
 
 - Set the speed of the animation
 
-- Download the maze's array as a text file
+- Download the maze to a png file and the maze's array as a text file
 
 ## 2 - Maze generation algorithms
 
