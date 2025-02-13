@@ -353,12 +353,18 @@ function downloadURI(uri, name) {
 function printToFile(div) {
   const start = document.getElementsByClassName("start")[0];
   const end = document.getElementsByClassName("end")[0];
+  const marked = Array.from(document.getElementsByClassName("marked"));
+  const viewed = Array.from(document.getElementsByClassName("viewed"));
   start.classList.remove("start");
   end.classList.remove("end");
+  marked.forEach((cell) => cell.classList.remove("marked"));
+  viewed.forEach((cell) => cell.classList.remove("viewed"));
   html2canvas(div).then(function (canvas) {
     var myImage = canvas.toDataURL("image/png");
     downloadURI(myImage, "maze.png");
     start.classList.add("start");
     end.classList.add("end");
+    marked.forEach((cell) => cell.classList.add("marked"));
+    viewed.forEach((cell) => cell.classList.add("viewed"));
   });
 }
