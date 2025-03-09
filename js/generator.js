@@ -147,6 +147,11 @@ document.getElementById("generate").addEventListener("click", function () {
       replaceStartEnd();
       kruskal();
       break;
+    case "modified_prim":
+      fillGrid();
+      replaceStartEnd();
+      modifiedPrim();
+      break
     case "origin_shift":
       fillGrid();
       replaceStartEnd();
@@ -866,6 +871,41 @@ async function kruskal() {
   }
   speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
   removeColors(maze);
+}
+
+async function modifiedPrim() {
+  let frontierCells = [];
+  const maze = document.getElementById("maze");
+  const start = getRandomCell(maze);
+  removeWall(start);
+  getNeighborsWithDirection(maze, start).forEach((neighbor) => {
+    removeWall(neighbor[0]);
+    neighbor[0].style.backgroundColor = "salmon";
+    frontierCells.push([neighbor[0], start]);
+    removeWall(neighbor[0]);
+  });
+  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+  while (frontierCells.length) {
+    random_index = Math.floor(Math.random() * frontierCells.length);
+    const [frontierCell, inCell] = frontierCells[random_index];
+    const [row, col] = getCellPosition(frontierCell);
+    const [row2, col2] = getCellPosition(inCell);
+    const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
+    removeWall(wall);
+    speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+    frontierCell.style.backgroundColor = "";
+    speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+    frontierCells = frontierCells.filter((cell) => cell !== frontierCells[random_index]);
+    getNeighborsWithDirection(maze, frontierCell).forEach((neighbor) => {
+      if (neighbor[0].style.backgroundColor === "") {
+        removeWall(neighbor[0]);
+        neighbor[0].style.backgroundColor = "salmon";
+        frontierCells.push([neighbor[0], frontierCell]);
+        removeWall(neighbor[0]);
+      }
+    });
+
+  }
 }
 
 async function originShift() {
