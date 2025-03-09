@@ -117,15 +117,50 @@ document.getElementById("generate").addEventListener("click", function () {
   const select = document.getElementById("select-algorithm");
   const algorithm = select.options[select.selectedIndex].value;
   switch (algorithm) {
+    case "aldous-broder":
+      fillGrid();
+      replaceStartEnd();
+      aldousBroder();
+      break;
+    case "binary_tree":
+      fillGrid();
+      replaceStartEnd();
+      binaryTree();
+      break;
+    case "eller":
+      scultGrid();
+      replaceStartEnd();
+      eller();
+      break;
+    case "hunt_and_kill":
+      fillGrid();
+      replaceStartEnd();
+      huntAndKill();
+      break;
+    case "iterative_division":
+      emptyGrid();
+      replaceStartEnd();
+      iterativeDivision();
+      break;
     case "kruskal":
       scultGrid();
       replaceStartEnd();
       kruskal();
       break;
+    case "origin_shift":
+      fillGrid();
+      replaceStartEnd();
+      originShift();
+      break;
     case "rdfs":
       fillGrid();
       replaceStartEnd();
       rdfs();
+      break;
+    case "sidewinder":
+      scultGrid();
+      replaceStartEnd();
+      sidewinder();
       break;
     case "simplified_prim":
       fillGrid();
@@ -137,45 +172,10 @@ document.getElementById("generate").addEventListener("click", function () {
       replaceStartEnd();
       truePrim();
       break;
-    case "hunt_and_kill":
-      fillGrid();
-      replaceStartEnd();
-      huntAndKill();
-      break;
-    case "eller":
-      scultGrid();
-      replaceStartEnd();
-      eller();
-      break;
-    case "iterative_division":
-      emptyGrid();
-      replaceStartEnd();
-      iterativeDivision();
-      break;
-    case "binary_tree":
-      fillGrid();
-      replaceStartEnd();
-      binaryTree();
-      break;
-    case "sidewinder":
-      scultGrid();
-      replaceStartEnd();
-      sidewinder();
-      break;
-    case "aldous-broder":
-      fillGrid();
-      replaceStartEnd();
-      aldousBroder();
-      break;
     case "wilson":
       fillGrid();
       replaceStartEnd();
       wilson();
-      break;
-    case "origin_shift":
-      scultGrid();
-      replaceStartEnd();
-      originShift();
       break;
     default:
       break;
@@ -519,202 +519,59 @@ function mergeValues(wall, values, colorMap) {
   }
 }
 
-async function kruskal() {
+async function aldousBroder() {
   const maze = document.getElementById("maze");
-  setRandomColor(maze);
-  const rows = maze.children;
-  let breakableWalls = getBreakableWalls(maze);
-
-  const colorMap = createColorMap(maze);
-
-  for (let wall of breakableWalls) {
-    const [row, column] = getCellPosition(wall);
-    let values = [];
-    if (row % 2 === 0) {
-      const upper_cell = rows[row - 1].children[column];
-      const bottom_cell = rows[row + 1].children[column];
-      values = [upper_cell, bottom_cell];
-    } else {
-      const left_cell = rows[row].children[column - 1];
-      const right_cell = rows[row].children[column + 1];
-      values = [left_cell, right_cell];
-    }
-
-    if (values[0].style.backgroundColor !== values[1].style.backgroundColor) {
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      mergeValues(wall, values, colorMap);
-    }
-  }
-  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-  removeColors(maze);
-}
-
-async function rdfs() {
-  const maze = document.getElementById("maze");
-  const start = getRandomCell(maze);
-  let stack = [start];
-  removeWall(start);
-  while (stack.length) {
-    const currentCell = stack[stack.length - 1];
-    const neighbors = getNeighbors(maze, currentCell);
-    if (neighbors.length) {
-      const neighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-      const [row, col] = getCellPosition(neighbor);
-      const [row2, col2] = getCellPosition(currentCell);
-      const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(wall);
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(neighbor);
-      stack.push(wall);
-      stack.push(neighbor);
-    } else {
-      const wall = stack.pop();
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      wall.classList.add("visited");
-      const visited = stack.pop();
-      if (stack.length) {
-        speed > 0 &&
-          (await new Promise((resolve) => setTimeout(resolve, speed)));
-        visited.classList.add("visited");
-      }
-    }
-  }
-  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-  maze
-    .querySelectorAll(".visited")
-    .forEach((cell) => cell.classList.remove("visited"));
-}
-
-async function simplifiedPrim() {
-  let neighbors = [];
-  const maze = document.getElementById("maze");
-  const start = getRandomCell(maze);
-  removeWall(start);
-  neighbors.push(...getNeighborsWithDirection(maze, start));
-  while (neighbors.length) {
-    const [neighbor, direction] =
-      neighbors[Math.floor(Math.random() * neighbors.length)];
-    if (neighbor.classList.contains("wall")) {
-      const [row, col] = getCellPosition(neighbor);
-      const wall =
-        maze.children[row - direction[0]].children[col - direction[1]];
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(wall);
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(neighbor);
-    }
-    neighbors = neighbors.filter((n) => n[0] !== neighbor);
-    neighbors.push(...getNeighborsWithDirection(maze, neighbor));
-  }
-}
-
-async function truePrim() {
-  let neighbors = new MinHeap();
-  const maze = document.getElementById("maze");
-  const start = getRandomCell(maze);
-
-  maze.querySelectorAll(".cell1, .cell2").forEach((cell) => {
-    if (!cell.classList.contains("wall")) {
-      rdmOpacity = Math.random();
-      cell.style.backgroundColor = `rgba(217, 4, 41, ${rdmOpacity})`;
-      cell.setAttribute("opacity", rdmOpacity);
-    }
-  });
-
-  start.style.backgroundColor = "";
-  start.removeAttribute("opacity");
-
-  for (let neighbor of getNeighborsWithDirection(maze, start)) {
-    const weight = getOpacityFromRgba(neighbor[0].style.backgroundColor);
-    neighbors.push([neighbor[0], neighbor[1], weight]);
-  }
-
-  while (neighbors.heap.length) {
-    const [neighbor, direction] = neighbors.pop();
-    if (neighbor.style.backgroundColor !== "") {
-      const [row, col] = getCellPosition(neighbor);
-      const wall =
-        maze.children[row - direction[0]].children[col - direction[1]];
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(wall);
-      neighbor.style.backgroundColor = "";
-      for (let next_neighbor of getNeighborsWithDirection(maze, neighbor)) {
-        if (next_neighbor[0].style.backgroundColor !== "") {
-          const weight = getOpacityFromRgba(
-            next_neighbor[0].style.backgroundColor
-          );
-          neighbors.push([next_neighbor[0], next_neighbor[1], weight]);
-        }
-      }
-    }
-  }
-}
-
-async function huntAndKill() {
-  const maze = document.getElementById("maze");
-  const huntScan = document.getElementById("hunt");
   const start = getRandomCell(maze);
   let cell = start;
+  const numberCell =
+    Math.floor(maze.children.length / 2) *
+    Math.floor(maze.children[0].children.length / 2);
   removeWall(cell);
-
-  async function hunt() {
-    const rows = maze.children;
-    huntScan.style.display = "block";
-    for (let i = 1; i < rows.length - 1; i += 2) {
-      huntScan.style.top =
-        Math.floor(
-          parseInt(huntScan.getAttribute("value")) + (i - 1) * cell.offsetHeight
-        ) + "px";
-      speed > 0 &&
-        (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
-      for (let j = 1; j < rows[i].children.length - 1; j += 2) {
-        const cell = rows[i].children[j];
-        if (cell.classList.contains("wall")) {
-          const neighbors = getConnection(maze, cell);
-          if (neighbors.length) {
-            const neighbor =
-              neighbors[Math.floor(Math.random() * neighbors.length)];
-            const [row, col] = getCellPosition(neighbor);
-            const [row2, col2] = getCellPosition(cell);
-            const wall =
-              maze.children[(row + row2) / 2].children[(col + col2) / 2];
-            speed > 0 &&
-              (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
-            huntScan.style.display = "none";
-            huntScan.style.top = huntScan.getAttribute("value") + "px";
-            speed > 0 &&
-              (await new Promise((resolve) => setTimeout(resolve, speed)));
-            removeWall(wall);
-            speed > 0 &&
-              (await new Promise((resolve) => setTimeout(resolve, speed)));
-            removeWall(cell);
-            return cell;
-          }
-        }
-      }
-      speed > 0 &&
-        (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
-    }
-    huntScan.style.display = "none";
-    huntScan.style.top = huntScan.getAttribute("value") + "px";
-    return null;
-  }
-
-  while (cell) {
-    const neighbors = getNeighbors(maze, cell);
-    if (neighbors.length) {
-      const neighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-      const [row, col] = getCellPosition(cell);
-      const [row2, col2] = getCellPosition(neighbor);
+  let visited = 1;
+  while (visited < numberCell) {
+    const neighbors = getAllNeighbors(maze, cell);
+    const rdmNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+    if (rdmNeighbor.classList.contains("wall")) {
+      const [row, col] = getCellPosition(rdmNeighbor);
+      const [row2, col2] = getCellPosition(cell);
       const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
       speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
       removeWall(wall);
       speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(neighbor);
-      cell = neighbor;
-    } else {
-      cell = await hunt();
+      removeWall(rdmNeighbor);
+      visited++;
+    }
+    cell = rdmNeighbor;
+  }
+}
+
+async function binaryTree() {
+  const maze = document.getElementById("maze");
+  const rows = maze.children;
+
+  for (let i = 1; i < rows.length - 1; i++) {
+    for (let j = 1; j < rows[i].children.length - 1; j++) {
+      if (i === 1 || j === 1) removeWall(rows[i].children[j]);
+    }
+  }
+
+  for (let i = 3; i < rows.length - 1; i += 2) {
+    for (let j = 3; j < rows[i].children.length - 1; j += 2) {
+      if (Math.random() > 0.5) {
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        removeWall(rows[i - 1].children[j]);
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        removeWall(rows[i].children[j]);
+      } else {
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        removeWall(rows[i].children[j - 1]);
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        removeWall(rows[i].children[j]);
+      }
     }
   }
 }
@@ -806,6 +663,74 @@ async function eller() {
   }
   speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
   removeColors(maze);
+}
+
+async function huntAndKill() {
+  const maze = document.getElementById("maze");
+  const huntScan = document.getElementById("hunt");
+  const start = getRandomCell(maze);
+  let cell = start;
+  removeWall(cell);
+
+  async function hunt() {
+    const rows = maze.children;
+    huntScan.style.display = "block";
+    for (let i = 1; i < rows.length - 1; i += 2) {
+      huntScan.style.top =
+        Math.floor(
+          parseInt(huntScan.getAttribute("value")) + (i - 1) * cell.offsetHeight
+        ) + "px";
+      speed > 0 &&
+        (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
+      for (let j = 1; j < rows[i].children.length - 1; j += 2) {
+        const cell = rows[i].children[j];
+        if (cell.classList.contains("wall")) {
+          const neighbors = getConnection(maze, cell);
+          if (neighbors.length) {
+            const neighbor =
+              neighbors[Math.floor(Math.random() * neighbors.length)];
+            const [row, col] = getCellPosition(neighbor);
+            const [row2, col2] = getCellPosition(cell);
+            const wall =
+              maze.children[(row + row2) / 2].children[(col + col2) / 2];
+            speed > 0 &&
+              (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
+            huntScan.style.display = "none";
+            huntScan.style.top = huntScan.getAttribute("value") + "px";
+            speed > 0 &&
+              (await new Promise((resolve) => setTimeout(resolve, speed)));
+            removeWall(wall);
+            speed > 0 &&
+              (await new Promise((resolve) => setTimeout(resolve, speed)));
+            removeWall(cell);
+            return cell;
+          }
+        }
+      }
+      speed > 0 &&
+        (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
+    }
+    huntScan.style.display = "none";
+    huntScan.style.top = huntScan.getAttribute("value") + "px";
+    return null;
+  }
+
+  while (cell) {
+    const neighbors = getNeighbors(maze, cell);
+    if (neighbors.length) {
+      const neighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+      const [row, col] = getCellPosition(cell);
+      const [row2, col2] = getCellPosition(neighbor);
+      const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      removeWall(wall);
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      removeWall(neighbor);
+      cell = neighbor;
+    } else {
+      cell = await hunt();
+    }
+  }
 }
 
 async function iterativeDivision() {
@@ -913,157 +838,30 @@ async function iterativeDivision() {
   }
 }
 
-async function binaryTree() {
+async function kruskal() {
   const maze = document.getElementById("maze");
+  setRandomColor(maze);
   const rows = maze.children;
+  let breakableWalls = getBreakableWalls(maze);
 
-  for (let i = 1; i < rows.length - 1; i++) {
-    for (let j = 1; j < rows[i].children.length - 1; j++) {
-      if (i === 1 || j === 1) removeWall(rows[i].children[j]);
+  const colorMap = createColorMap(maze);
+
+  for (let wall of breakableWalls) {
+    const [row, column] = getCellPosition(wall);
+    let values = [];
+    if (row % 2 === 0) {
+      const upper_cell = rows[row - 1].children[column];
+      const bottom_cell = rows[row + 1].children[column];
+      values = [upper_cell, bottom_cell];
+    } else {
+      const left_cell = rows[row].children[column - 1];
+      const right_cell = rows[row].children[column + 1];
+      values = [left_cell, right_cell];
     }
-  }
 
-  for (let i = 3; i < rows.length - 1; i += 2) {
-    for (let j = 3; j < rows[i].children.length - 1; j += 2) {
-      if (Math.random() > 0.5) {
-        speed > 0 &&
-          (await new Promise((resolve) => setTimeout(resolve, speed)));
-        removeWall(rows[i - 1].children[j]);
-        speed > 0 &&
-          (await new Promise((resolve) => setTimeout(resolve, speed)));
-        removeWall(rows[i].children[j]);
-      } else {
-        speed > 0 &&
-          (await new Promise((resolve) => setTimeout(resolve, speed)));
-        removeWall(rows[i].children[j - 1]);
-        speed > 0 &&
-          (await new Promise((resolve) => setTimeout(resolve, speed)));
-        removeWall(rows[i].children[j]);
-      }
-    }
-  }
-}
-
-async function sidewinder() {
-  const rows = document.getElementById("maze").children;
-
-  Array.from(rows[1].children).slice(1, -1).forEach(removeWall);
-
-  const [northDirection, eastDirection] = [
-    [-1, 0],
-    [0, 1],
-  ];
-
-  let cells = [];
-
-  for (let i = 3; i < rows.length - 1; i += 2) {
-    for (let j = 1; j < rows[i].children.length - 1; j += 2) {
-      cells.push(rows[i].children[j]);
-      if (Math.random() <= 0.5 || j === rows[i].children.length - 2) {
-        const cellCoordinates = getCellPosition(
-          cells[Math.floor(Math.random() * cells.length)]
-        );
-        const wallCoordinates = [
-          cellCoordinates[0] + northDirection[0],
-          cellCoordinates[1] + northDirection[1],
-        ];
-        speed > 0 &&
-          (await new Promise((resolve) => setTimeout(resolve, speed)));
-        removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
-        cells = [];
-      } else {
-        const cellCoordinates = getCellPosition(rows[i].children[j]);
-        const wallCoordinates = [
-          cellCoordinates[0],
-          cellCoordinates[1] + eastDirection[1],
-        ];
-        speed > 0 &&
-          (await new Promise((resolve) => setTimeout(resolve, speed)));
-        removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
-      }
-    }
-  }
-}
-
-async function aldousBroder() {
-  const maze = document.getElementById("maze");
-  const start = getRandomCell(maze);
-  let cell = start;
-  const numberCell =
-    Math.floor(maze.children.length / 2) *
-    Math.floor(maze.children[0].children.length / 2);
-  removeWall(cell);
-  let visited = 1;
-  while (visited < numberCell) {
-    const neighbors = getAllNeighbors(maze, cell);
-    const rdmNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-    if (rdmNeighbor.classList.contains("wall")) {
-      const [row, col] = getCellPosition(rdmNeighbor);
-      const [row2, col2] = getCellPosition(cell);
-      const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
+    if (values[0].style.backgroundColor !== values[1].style.backgroundColor) {
       speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(wall);
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(rdmNeighbor);
-      visited++;
-    }
-    cell = rdmNeighbor;
-  }
-}
-
-async function wilson() {
-  function getRemainningCells(maze) {
-    const rows = maze.children;
-    const remainningCells = [];
-    for (let i = 1; i < rows.length - 1; i += 2) {
-      for (let j = 1; j < rows[i].children.length - 1; j += 2) {
-        if (rows[i].children[j].classList.contains("wall")) {
-          remainningCells.push(rows[i].children[j]);
-        }
-      }
-    }
-    return remainningCells;
-  }
-
-  const maze = document.getElementById("maze");
-
-  let end = getRandomCell(maze);
-  removeWall(end);
-  end.style.backgroundColor = "rgba(229, 60, 60, 0.5)";
-
-  let remainningCells;
-  const colors = [];
-
-  while ((remainningCells = getRemainningCells(maze)).length) {
-    const start =
-      remainningCells[Math.floor(Math.random() * remainningCells.length)];
-    const path = [start];
-    while (path[path.length - 1].classList.contains("wall")) {
-      const currentCell = path[path.length - 1];
-      const neighbors = getAllNeighbors(maze, currentCell);
-      const rdmNeighbor =
-        neighbors[Math.floor(Math.random() * neighbors.length)];
-      if (path.length > 1 && rdmNeighbor === path[path.length - 2]) {
-        path.pop();
-      } else if (path.includes(rdmNeighbor)) {
-        const index = path.indexOf(rdmNeighbor);
-        path.splice(index + 1);
-      } else {
-        path.push(rdmNeighbor);
-      }
-    }
-    const rdmColor = getRandomColor(colors);
-    colors.push(rdmColor);
-    for (let i = 0; i < path.length - 1; i++) {
-      const [row, col] = getCellPosition(path[i]);
-      const [row2, col2] = getCellPosition(path[i + 1]);
-      const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(path[i]);
-      path[i].style.backgroundColor = rdmColor;
-      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-      removeWall(wall);
-      wall.style.backgroundColor = rdmColor;
+      mergeValues(wall, values, colorMap);
     }
   }
   speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
@@ -1147,4 +945,206 @@ async function originShift() {
   origin.style.backgroundColor = "";
   start.classList.add("start");
   end.classList.add("end");
+}
+
+async function rdfs() {
+  const maze = document.getElementById("maze");
+  const start = getRandomCell(maze);
+  let stack = [start];
+  removeWall(start);
+  while (stack.length) {
+    const currentCell = stack[stack.length - 1];
+    const neighbors = getNeighbors(maze, currentCell);
+    if (neighbors.length) {
+      const neighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+      const [row, col] = getCellPosition(neighbor);
+      const [row2, col2] = getCellPosition(currentCell);
+      const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      removeWall(wall);
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      removeWall(neighbor);
+      stack.push(wall);
+      stack.push(neighbor);
+    } else {
+      const wall = stack.pop();
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      wall.classList.add("visited");
+      const visited = stack.pop();
+      if (stack.length) {
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        visited.classList.add("visited");
+      }
+    }
+  }
+  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+  maze
+    .querySelectorAll(".visited")
+    .forEach((cell) => cell.classList.remove("visited"));
+}
+
+async function sidewinder() {
+  const rows = document.getElementById("maze").children;
+
+  Array.from(rows[1].children).slice(1, -1).forEach(removeWall);
+
+  const [northDirection, eastDirection] = [
+    [-1, 0],
+    [0, 1],
+  ];
+
+  let cells = [];
+
+  for (let i = 3; i < rows.length - 1; i += 2) {
+    for (let j = 1; j < rows[i].children.length - 1; j += 2) {
+      cells.push(rows[i].children[j]);
+      if (Math.random() <= 0.5 || j === rows[i].children.length - 2) {
+        const cellCoordinates = getCellPosition(
+          cells[Math.floor(Math.random() * cells.length)]
+        );
+        const wallCoordinates = [
+          cellCoordinates[0] + northDirection[0],
+          cellCoordinates[1] + northDirection[1],
+        ];
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
+        cells = [];
+      } else {
+        const cellCoordinates = getCellPosition(rows[i].children[j]);
+        const wallCoordinates = [
+          cellCoordinates[0],
+          cellCoordinates[1] + eastDirection[1],
+        ];
+        speed > 0 &&
+          (await new Promise((resolve) => setTimeout(resolve, speed)));
+        removeWall(rows[wallCoordinates[0]].children[wallCoordinates[1]]);
+      }
+    }
+  }
+}
+
+async function simplifiedPrim() {
+  let neighbors = [];
+  const maze = document.getElementById("maze");
+  const start = getRandomCell(maze);
+  removeWall(start);
+  neighbors.push(...getNeighborsWithDirection(maze, start));
+  while (neighbors.length) {
+    const [neighbor, direction] =
+      neighbors[Math.floor(Math.random() * neighbors.length)];
+    if (neighbor.classList.contains("wall")) {
+      const [row, col] = getCellPosition(neighbor);
+      const wall =
+        maze.children[row - direction[0]].children[col - direction[1]];
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      removeWall(wall);
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      removeWall(neighbor);
+    }
+    neighbors = neighbors.filter((n) => n[0] !== neighbor);
+    neighbors.push(...getNeighborsWithDirection(maze, neighbor));
+  }
+}
+
+async function truePrim() {
+  let neighbors = new MinHeap();
+  const maze = document.getElementById("maze");
+  const start = getRandomCell(maze);
+
+  maze.querySelectorAll(".cell1, .cell2").forEach((cell) => {
+    if (!cell.classList.contains("wall")) {
+      rdmOpacity = Math.random();
+      cell.style.backgroundColor = `rgba(217, 4, 41, ${rdmOpacity})`;
+      cell.setAttribute("opacity", rdmOpacity);
+    }
+  });
+
+  start.style.backgroundColor = "";
+  start.removeAttribute("opacity");
+
+  for (let neighbor of getNeighborsWithDirection(maze, start)) {
+    const weight = getOpacityFromRgba(neighbor[0].style.backgroundColor);
+    neighbors.push([neighbor[0], neighbor[1], weight]);
+  }
+
+  while (neighbors.heap.length) {
+    const [neighbor, direction] = neighbors.pop();
+    if (neighbor.style.backgroundColor !== "") {
+      const [row, col] = getCellPosition(neighbor);
+      const wall =
+        maze.children[row - direction[0]].children[col - direction[1]];
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      removeWall(wall);
+      neighbor.style.backgroundColor = "";
+      for (let next_neighbor of getNeighborsWithDirection(maze, neighbor)) {
+        if (next_neighbor[0].style.backgroundColor !== "") {
+          const weight = getOpacityFromRgba(
+            next_neighbor[0].style.backgroundColor
+          );
+          neighbors.push([next_neighbor[0], next_neighbor[1], weight]);
+        }
+      }
+    }
+  }
+}
+
+async function wilson() {
+  function getRemainningCells(maze) {
+    const rows = maze.children;
+    const remainningCells = [];
+    for (let i = 1; i < rows.length - 1; i += 2) {
+      for (let j = 1; j < rows[i].children.length - 1; j += 2) {
+        if (rows[i].children[j].classList.contains("wall")) {
+          remainningCells.push(rows[i].children[j]);
+        }
+      }
+    }
+    return remainningCells;
+  }
+
+  const maze = document.getElementById("maze");
+
+  let end = getRandomCell(maze);
+  removeWall(end);
+  end.style.backgroundColor = "rgba(229, 60, 60, 0.5)";
+
+  let remainningCells;
+  const colors = [];
+
+  while ((remainningCells = getRemainningCells(maze)).length) {
+    const start =
+      remainningCells[Math.floor(Math.random() * remainningCells.length)];
+    const path = [start];
+    while (path[path.length - 1].classList.contains("wall")) {
+      const currentCell = path[path.length - 1];
+      const neighbors = getAllNeighbors(maze, currentCell);
+      const rdmNeighbor =
+        neighbors[Math.floor(Math.random() * neighbors.length)];
+      if (path.length > 1 && rdmNeighbor === path[path.length - 2]) {
+        path.pop();
+      } else if (path.includes(rdmNeighbor)) {
+        const index = path.indexOf(rdmNeighbor);
+        path.splice(index + 1);
+      } else {
+        path.push(rdmNeighbor);
+      }
+    }
+    const rdmColor = getRandomColor(colors);
+    colors.push(rdmColor);
+    for (let i = 0; i < path.length - 1; i++) {
+      const [row, col] = getCellPosition(path[i]);
+      const [row2, col2] = getCellPosition(path[i + 1]);
+      const wall = maze.children[(row + row2) / 2].children[(col + col2) / 2];
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      removeWall(path[i]);
+      path[i].style.backgroundColor = rdmColor;
+      speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+      removeWall(wall);
+      wall.style.backgroundColor = rdmColor;
+    }
+  }
+  speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
+  removeColors(maze);
 }
