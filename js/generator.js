@@ -153,7 +153,7 @@ document.getElementById("generate").addEventListener("click", function () {
       modifiedPrim();
       break;
     case "origin_shift":
-      fillGrid();
+      scultGrid();
       replaceStartEnd();
       originShift();
       break;
