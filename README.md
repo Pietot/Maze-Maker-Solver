@@ -129,6 +129,13 @@ The web page is available : **[here](pietot.github.io/Maze-Maker-Solver/)**
 	<img src="assets/img/origin_shift.png" width="49%" alt="Animation showing the process of origin shift algorithm" style="border-radius:10px"> <br><br>
 </p>
 
+- **Pietot algorithm (mine):**
+
+<p align="center">
+	I didn't do a visualization, sorry ^^
+</p>
+
+
 <br/>
 
 ## 3 - Pathfinding algorithms
