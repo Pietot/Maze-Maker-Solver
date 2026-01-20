@@ -157,6 +157,11 @@ document.getElementById("generate").addEventListener("click", function () {
       replaceStartEnd();
       originShift();
       break;
+    case "pietot":
+      scultGrid();
+      replaceStartEnd();
+      pietot();
+      break;
     case "rdfs":
       fillGrid();
       replaceStartEnd();
@@ -987,6 +992,83 @@ async function originShift() {
   end.classList.add("end");
 }
 
+async function pietot() {
+  const maze = document.getElementById("maze");
+  const rows = maze.children;
+  const cols = rows[0].children.length;
+
+  const getCell = (r, c) => rows[r]?.children[c];
+
+  const allCells = [];
+  for (let r = 1; r < rows.length; r += 2) {
+    for (let c = 1; c < cols; c += 2) {
+      const cell = getCell(r, c);
+      if (
+        cell.classList.contains("cell1") ||
+        cell.classList.contains("cell2")
+      ) {
+        allCells.push([r, c]);
+      }
+    }
+  }
+
+  const visited = new Set();
+  const first = allCells[Math.floor(Math.random() * allCells.length)];
+  visited.add(first.join(","));
+  getCell(first[0], first[1]).classList.add("visited");
+
+  while (visited.size < allCells.length) {
+    const visitedArray = Array.from(visited).map((s) =>
+      s.split(",").map(Number),
+    );
+    const target =
+      visitedArray[Math.floor(Math.random() * visitedArray.length)];
+
+    const unvisited = allCells.filter((c) => !visited.has(c.join(",")));
+    if (!unvisited.length) break;
+    const start = unvisited[Math.floor(Math.random() * unvisited.length)];
+
+    const startEl = getCell(start[0], start[1]);
+    const targetEl = getCell(target[0], target[1]);
+
+    startEl.classList.add("visited");
+    visited.add(start.join(","));
+
+    startEl.style.backgroundColor = "#00cc00";
+    targetEl.style.backgroundColor = "#ff0000";
+    if (speed > 0) await new Promise((resolve) => setTimeout(resolve, speed));
+
+    const path = manhattanPath(start, target);
+    for (const step of path) {
+      const { cell, direction } = step;
+      const wall = [cell[0] - direction[0] / 2, cell[1] - direction[1] / 2];
+
+      const cellEl = getCell(cell[0], cell[1]);
+      const wallEl = getCell(wall[0], wall[1]);
+
+      if (wallEl) {
+        wallEl.classList.remove("wall");
+        wallEl.classList.add("visited");
+      }
+
+      if (visited.has(cell.join(","))) break;
+
+      cellEl.classList.add("visited");
+      visited.add(cell.join(","));
+
+      if (speed > 0) await new Promise((resolve) => setTimeout(resolve, speed));
+      cellEl.style.backgroundColor = "";
+    }
+
+    startEl.style.backgroundColor = "";
+    targetEl.style.backgroundColor = "";
+  }
+
+  maze
+    .querySelectorAll(".visited")
+    .forEach((cell) => cell.classList.remove("visited"));
+}
+
 async function rdfs() {
   const maze = document.getElementById("maze");
   const start = getRandomCell(maze);
@@ -1187,4 +1269,23 @@ async function wilson() {
   }
   speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
   removeColors(maze);
+}
+
+function manhattanPath(a, b) {
+  const dx = b[0] - a[0];
+  const dy = b[1] - a[1];
+
+  let directions = [];
+  for (let i = 0; i < Math.abs(dx / 2); i++)
+    directions.push([dx > 0 ? 2 : -2, 0]);
+  for (let i = 0; i < Math.abs(dy / 2); i++)
+    directions.push([0, dy > 0 ? 2 : -2]);
+
+  directions.sort(() => Math.random() - 0.5);
+
+  let current = [...a];
+  return directions.map((d) => {
+    current = [current[0] + d[0], current[1] + d[1]];
+    return { cell: [...current], direction: d };
+  });
 }
