@@ -151,7 +151,7 @@ document.getElementById("generate").addEventListener("click", function () {
       fillGrid();
       replaceStartEnd();
       modifiedPrim();
-      break
+      break;
     case "origin_shift":
       fillGrid();
       replaceStartEnd();
@@ -378,7 +378,7 @@ function getNeighborsWithDirection(maze, cell) {
     (row > 1 && rows[row - 2].children[col].getAttribute("opacity")) ||
     (row > 1 &&
       classesToCheck.some((cls) =>
-        rows[row - 2].children[col].classList.contains(cls)
+        rows[row - 2].children[col].classList.contains(cls),
       ))
   ) {
     neighbors.push([rows[row - 2].children[col], [-1, 0]]);
@@ -391,7 +391,7 @@ function getNeighborsWithDirection(maze, cell) {
       rows[row].children[col + 2].getAttribute("opacity")) ||
     (col < rows[0].children.length - 2 &&
       classesToCheck.some((cls) =>
-        rows[row].children[col + 2].classList.contains(cls)
+        rows[row].children[col + 2].classList.contains(cls),
       ))
   ) {
     neighbors.push([rows[row].children[col + 2], [0, 1]]);
@@ -404,7 +404,7 @@ function getNeighborsWithDirection(maze, cell) {
       rows[row + 2].children[col].getAttribute("opacity")) ||
     (row < rows.length - 2 &&
       classesToCheck.some((cls) =>
-        rows[row + 2].children[col].classList.contains(cls)
+        rows[row + 2].children[col].classList.contains(cls),
       ))
   ) {
     neighbors.push([rows[row + 2].children[col], [1, 0]]);
@@ -415,7 +415,7 @@ function getNeighborsWithDirection(maze, cell) {
     (col > 1 && rows[row].children[col - 2].getAttribute("opacity")) ||
     (col > 1 &&
       classesToCheck.some((cls) =>
-        rows[row].children[col - 2].classList.contains(cls)
+        rows[row].children[col - 2].classList.contains(cls),
       ))
   ) {
     neighbors.push([rows[row].children[col - 2], [0, -1]]);
@@ -609,7 +609,7 @@ async function eller() {
         mergeValues(
           maze.children[rowIndex].children[valueIndex + 1],
           [val1, val2],
-          colorMap
+          colorMap,
         );
       }
       if (
@@ -621,7 +621,7 @@ async function eller() {
         mergeValues(
           maze.children[rowIndex].children[valueIndex + 1],
           [val1, val2],
-          colorMap
+          colorMap,
         );
       }
     }
@@ -688,7 +688,8 @@ async function huntAndKill() {
     for (let i = 1; i < rows.length - 1; i += 2) {
       huntScan.style.top =
         Math.floor(
-          parseInt(huntScan.getAttribute("value")) + (i - 1) * cell.offsetHeight
+          parseInt(huntScan.getAttribute("value")) +
+            (i - 1) * cell.offsetHeight,
         ) + "px";
       speed > 0 &&
         (await new Promise((resolve) => setTimeout(resolve, 2 * speed)));
@@ -768,13 +769,13 @@ async function iterativeDivision() {
       //                     ]
       const wallColumns = Array.from(
         { length: endIndex[1] - startIndex[1] + 1 },
-        (_, i) => startIndex[1] + i
+        (_, i) => startIndex[1] + i,
       ).filter(
         (i) =>
           i !== startIndex[1] &&
           i !== ban[1] &&
           i !== endIndex[1] &&
-          i % 2 === 0
+          i % 2 === 0,
       );
       const wallColumnIndex =
         wallColumns[Math.floor(Math.random() * wallColumns.length)];
@@ -787,7 +788,7 @@ async function iterativeDivision() {
       speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
       const entries = Array.from(
         { length: endIndex[0] - startIndex[0] + 1 },
-        (_, i) => startIndex[0] + i
+        (_, i) => startIndex[0] + i,
       ).filter((i) => i % 2 === 1);
       const entry = entries[Math.floor(Math.random() * entries.length)];
       const entryCoordinates = [entry, wallColumnIndex];
@@ -809,13 +810,13 @@ async function iterativeDivision() {
       //                  ]
       const wallRows = Array.from(
         { length: endIndex[0] - startIndex[0] + 1 },
-        (_, i) => startIndex[0] + i
+        (_, i) => startIndex[0] + i,
       ).filter(
         (i) =>
           i !== startIndex[0] &&
           i !== ban[0] &&
           i !== endIndex[0] &&
-          i % 2 === 0
+          i % 2 === 0,
       );
       const wallRowIndex =
         wallRows[Math.floor(Math.random() * wallRows.length)];
@@ -828,7 +829,7 @@ async function iterativeDivision() {
       speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
       const entries = Array.from(
         { length: endIndex[1] - startIndex[1] + 1 },
-        (_, i) => startIndex[1] + i
+        (_, i) => startIndex[1] + i,
       ).filter((i) => i % 2 === 1);
       const entry = entries[Math.floor(Math.random() * entries.length)];
       const entryCoordinates = [wallRowIndex, entry];
@@ -900,7 +901,9 @@ async function modifiedPrim() {
     speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
     frontierCell.style.backgroundColor = "";
     speed > 0 && (await new Promise((resolve) => setTimeout(resolve, speed)));
-    frontierCells = frontierCells.filter((cell) => cell !== frontierCells[random_index]);
+    frontierCells = frontierCells.filter(
+      (cell) => cell !== frontierCells[random_index],
+    );
     getNeighborsWithDirection(maze, frontierCell).forEach((neighbor) => {
       if (neighbor[0].style.backgroundColor === "") {
         removeWall(neighbor[0]);
@@ -909,7 +912,6 @@ async function modifiedPrim() {
         removeWall(neighbor[0]);
       }
     });
-
   }
 }
 
@@ -1123,7 +1125,7 @@ async function sidewinder() {
       cells.push(rows[i].children[j]);
       if (Math.random() <= 0.5 || j === rows[i].children.length - 2) {
         const cellCoordinates = getCellPosition(
-          cells[Math.floor(Math.random() * cells.length)]
+          cells[Math.floor(Math.random() * cells.length)],
         );
         const wallCoordinates = [
           cellCoordinates[0] + northDirection[0],
@@ -1203,7 +1205,7 @@ async function truePrim() {
       for (let next_neighbor of getNeighborsWithDirection(maze, neighbor)) {
         if (next_neighbor[0].style.backgroundColor !== "") {
           const weight = getOpacityFromRgba(
-            next_neighbor[0].style.backgroundColor
+            next_neighbor[0].style.backgroundColor,
           );
           neighbors.push([next_neighbor[0], next_neighbor[1], weight]);
         }
