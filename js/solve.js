@@ -39,7 +39,7 @@ class MinHeapComparator {
         this.getRightChildIndex(index) < this.heap.length &&
         this.comparator(
           this.heap[this.getRightChildIndex(index)],
-          this.heap[smallerChildIndex]
+          this.heap[smallerChildIndex],
         ) < 0
       ) {
         smallerChildIndex = this.getRightChildIndex(index);
@@ -132,7 +132,7 @@ function getCellNeighbors(maze, cell, directions = null) {
       newCol >= 0 &&
       newCol < rows[newRow].children.length &&
       !classNames.some((className) =>
-        rows[newRow].children[newCol].classList.contains(className)
+        rows[newRow].children[newCol].classList.contains(className),
       )
     ) {
       neighbors.push(rows[newRow].children[newCol]);
@@ -205,7 +205,7 @@ async function dfs() {
     const neighbors = getCellNeighbors(
       maze,
       current,
-      getDirectionPriority(getCellPosition(current), getCellPosition(end))
+      getDirectionPriority(getCellPosition(current), getCellPosition(end)),
     );
     for (let neighbor of neighbors) {
       if (!visited.has(neighbor)) {
@@ -363,7 +363,7 @@ async function aStar() {
   function heuristic(cell) {
     const [startRow, startCol] = getCellPosition(cell);
     const [endRow, endCol] = getCellPosition(end);
-    return Math.abs(startRow - endRow) + Math.abs(startCol - endCol);
+    return Math.abs(startRow - endRow) + Math.abs(startCol - endCol) * Math.sqrt(2);
   }
 
   isRunning = true;
