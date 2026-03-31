@@ -5,7 +5,7 @@
 
 Maze Maker Solver is a online web page that allows you to understant more easily how maze generating and pathfinding algorithms work. This project is an online visualisation of my previous python package project : **[Lapyrinth](https://github.com/Pietot/Lapyrinth)**
 
-The web page is available : **[here](pietot.github.io/Maze-Maker-Solver/)**
+The web page is available : **[here](maze-maker-solver.vercel.app/)**
 
 <p align="center">
 	<img src="assets/img/page.png">
